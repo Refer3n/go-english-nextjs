@@ -1,11 +1,11 @@
 import AuthForm from "@/components/AuthForm";
 import React from "react";
-import { signInSchema } from "@/lib/validations";
+import { logInSchema } from "@/lib/validations";
 
 const page = () => (
   <AuthForm
     type="LOG_IN"
-    schema={signInSchema}
+    schema={logInSchema}
     defaultValues={{ email: "", password: "" }}
     onSubmit={() => {}}
   />

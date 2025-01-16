@@ -1,11 +1,12 @@
-import React from 'react'
+"use client";
 
-interface Props<T extends FieldValues>
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-const AuthForm = ({type, schema, defaultValues, onSubmit}: Props) => {
-  return (
-    <div>AuthForm --{type}</div>
-  )
-}
+//interface Props<T extends FieldValues>
 
-export default AuthForm
+const AuthForm = ({ type, schema, defaultValues, onSubmit }: Props) => {
+  return <div>AuthForm -- {type}</div>;
+};
+
+export default AuthForm;
