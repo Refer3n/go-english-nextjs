@@ -37,7 +37,7 @@
   }
 
   .auth-form {
-    @apply p-[20px] bg-white rounded-lg shadow-[0px_4px_8px_0px_rgba(68,70,165,0.40)] w-[400px]
+    @apply items-center justify-center p-[20px] bg-white rounded-lg shadow-[0px_4px_8px_0px_rgba(68,70,165,0.40)] w-[400px]
   }
 
   .auth-box {
