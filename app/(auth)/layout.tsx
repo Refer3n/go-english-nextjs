@@ -4,11 +4,11 @@ import { ReactNode } from "react";
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <main className="auth-container">
-      <section className="flex flex-col justify-center items-center w-5/12">
+      <section className="flex flex-col justify-center items-center w-2/3 h-full">
         <div className="text-center">
           <div className="flex flex-col align-items-start">
             <div className="flex gap-2 mb-1">
-            {Array(2)
+              {Array(2)
                 .fill(0)
                 .map((_, index) => (
                   <Image
@@ -22,9 +22,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
                 ))}
             </div>
             <div className="flex items-center">
-              <span className="w-6 text-light-100 text-4xl font-bold">
-                G
-              </span>
+              <span className="w-6 text-light-100 text-4xl font-bold">G</span>
               <Image
                 src="/circle.svg"
                 alt="Circle"

@@ -40,7 +40,7 @@
     @apply relative flex h-screen w-screen bg-primary items-center justify-center;
   }
   .auth-form {
-    @apply w-5/12 flex items-center justify-center bg-primary p-[20px];
+    @apply w-5/12 flex items-center justify-center bg-primary;
   }
 
   .auth-box {
