@@ -1,7 +1,13 @@
 import Image from "next/image";
 import { ReactNode } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth();
+
+  if(session) redirect("/profile");
+
   return (
     <main className="auth-container">
       <section className="flex flex-col justify-center items-center w-2/3 h-full">

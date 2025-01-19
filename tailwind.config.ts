@@ -27,6 +27,7 @@ export default {
         },
         light: {
           100: "#F6F6FC",
+          200: "#F6DDDD",
         },
       },
       screens: {

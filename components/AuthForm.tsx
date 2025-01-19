@@ -26,6 +26,7 @@ import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from "./ui/checkbox";
+import { useRouter } from "next/navigation";
 
 interface Props<T extends FieldValues> {
   type: "LOG_IN" | "SIGN_UP";
@@ -40,8 +41,10 @@ const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) => {
+  const router = useRouter();
   const isLogIn = type === "LOG_IN";
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -49,7 +52,13 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    await onSubmit(data);
+    const result = await onSubmit(data);
+    if (!result.success) {
+      setErrorMessage("Incorrect email or password. Please try again.");
+    } else {
+      setErrorMessage(null);
+      router.push("/profile");
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -67,6 +76,9 @@ const AuthForm = <T extends FieldValues>({
           {isLogIn ? "Sign up" : "Log in"}
         </Link>
       </p>
+      {errorMessage && (
+            <div className="p-10 text-center text-red">{errorMessage}</div>
+          )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
