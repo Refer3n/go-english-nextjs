@@ -57,12 +57,12 @@ const AuthForm = <T extends FieldValues>({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-[340px]">
+    <div className="flex flex-col gap-4 w-[340px] max-h-[100vh] overflow-y-scroll hide-scrollbar pb-3 pt-5">
       <h1 className="text-2xl font-bold leading-6 text-yellow text-center mt-5">
         {isLogIn ? "Log in to Go English" : "Welcome to Go English"}
       </h1>
       <p className="text-light-100 leading-6 text-center">
-        {isLogIn ? "Don't have an account? " : "Already have a profile? "} 
+        {isLogIn ? "Don't have an account? " : "Already have a profile? "}
         <Link className="text-yellow" href={isLogIn ? "/sign-up" : "/log-in"}>
           {isLogIn ? "Sign up" : "Log in"}
         </Link>
@@ -107,17 +107,23 @@ const AuthForm = <T extends FieldValues>({
                         </div>
                         <Input
                           type={
-                            (field.name === "password" || field.name === "confirmPassword")
+                            field.name === "password" ||
+                            field.name === "confirmPassword"
                               ? showPassword
                                 ? "text"
                                 : "password"
-                              : FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
+                              : FIELD_TYPES[
+                                  field.name as keyof typeof FIELD_TYPES
+                                ]
                           }
-                          placeholder= {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
+                          placeholder={
+                            FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]
+                          }
                           {...field}
                           className="pl-10 bg-white rounded-2xl text-primary text-base"
                         />
-                        {(field.name === "password" || field.name === "confirmPassword") && (
+                        {(field.name === "password" ||
+                          field.name === "confirmPassword") && (
                           <button
                             type="button"
                             onClick={togglePasswordVisibility}
@@ -150,13 +156,16 @@ const AuthForm = <T extends FieldValues>({
                       </Link>
                     </div>
                   )}
-                  <FormMessage className="text-red"/>
+                  <FormMessage className="text-red" />
                 </FormItem>
               )}
             />
           ))}
 
-          <Button type="submit" className="w-full bg-yellow text-primary rounded-full font-bold text-lg hover:bg-yellow hover:text-primary py-4 px-8">
+          <Button
+            type="submit"
+            className="w-full bg-yellow text-primary rounded-full font-bold text-lg hover:bg-yellow hover:text-primary py-4 px-8"
+          >
             {isLogIn ? "Log In" : "Create an account"}
           </Button>
         </form>
@@ -164,7 +173,10 @@ const AuthForm = <T extends FieldValues>({
       <p className="text-light-100 font-normal text-center">Or continue with</p>
       <div className="flex flex-row gap-2 justify-center">
         {["google", "facebook", "apple"].map((platform) => (
-          <Button key={platform} className="bg-white hover:bg-white px-10 py-6 rounded-3xl">
+          <Button
+            key={platform}
+            className="bg-white hover:bg-white px-10 py-6 rounded-3xl"
+          >
             <Image
               src={`/icons/${platform}-icon.svg`}
               width={24}
