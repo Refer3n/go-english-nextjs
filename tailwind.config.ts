@@ -10,8 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        "ibm-plex-sans": ["IBM Plex Sans", "sans-serif"],
-        "bebas-neue": ["var(--bebas-neue)"],
+        "Nunito-sans": ["Nunito-Sans", "sans-serif"],
       },
       colors: {
         primary: {
@@ -21,14 +20,13 @@ export default {
           DEFAULT: "#FF0000",
         },
         blue: {
-          100: "#1443E8",
+          100: "#89A3FF",
         },
-		yellow: {
-			DEFAULT: "#F4CE12",
-		},
-        gray: {
-          100: "#C2C3D5",
-          200: "#7A7A84",
+        yellow: {
+          DEFAULT: "#F4CE12",
+        },
+        light: {
+          100: "#F6F6FC",
         },
       },
       screens: {

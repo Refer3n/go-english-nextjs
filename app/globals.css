@@ -7,6 +7,10 @@
     --radius: 0.5rem;
   }
 
+  html {
+    font-family: "Nunito Sans", sans-serif;
+  }
+
   .hide-scrollbar::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -33,11 +37,10 @@
 
 @layer utilities  {
   .auth-container {
-    @apply relative flex h-screen bg-white p-[30px] items-center justify-center;
+    @apply relative flex h-screen w-screen bg-primary items-center justify-center;
   }
-
   .auth-form {
-    @apply items-center justify-center p-[20px] bg-white rounded-lg shadow-[0px_4px_8px_0px_rgba(68,70,165,0.40)] w-[400px]
+    @apply w-5/12 flex items-center justify-center bg-primary p-[20px];
   }
 
   .auth-box {
@@ -45,7 +48,7 @@
   }
 
   .auth-illustration {
-    @apply sticky h-40 w-full sm:top-0 sm:h-screen sm:flex-1;
+    @apply sticky h-full w-60 sm:top-0 sm:h-screen sm:flex-1;
   }
 }
 

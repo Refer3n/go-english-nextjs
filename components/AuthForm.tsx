@@ -57,20 +57,20 @@ const AuthForm = <T extends FieldValues>({
   };
 
   return (
-    <div className="flex flex-col gap-5">
-      <h1 className="text-2xl font-bold text-primary text-center">
-        {isLogIn ? "Log in to Go English" : "Registration page"}
+    <div className="flex flex-col gap-4 w-[340px]">
+      <h1 className="text-2xl font-bold leading-6 text-yellow text-center mt-5">
+        {isLogIn ? "Log in to Go English" : "Welcome to Go English"}
       </h1>
-      <p className="text-primary text-center">
-        {isLogIn ? "Don't have an account? " : "Already have an account? "}
-        <Link className="text-blue-100" href={isLogIn ? "/sign-up" : "/log-in"}>
+      <p className="text-light-100 leading-6 text-center">
+        {isLogIn ? "Don't have an account? " : "Already have a profile? "} 
+        <Link className="text-yellow" href={isLogIn ? "/sign-up" : "/log-in"}>
           {isLogIn ? "Sign up" : "Log in"}
         </Link>
       </p>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="space-y-6 w-full"
+          className="space-y-5 w-full"
           noValidate
         >
           {Object.keys(defaultValues).map((field) => (
@@ -81,7 +81,7 @@ const AuthForm = <T extends FieldValues>({
               render={({ field }) => (
                 <FormItem>
                   {field.name !== "rememberMe" && (
-                    <FormLabel className="capitalize text-primary">
+                    <FormLabel className="capitalize text-light-100 font-normal">
                       {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                     </FormLabel>
                   )}
@@ -91,48 +91,56 @@ const AuthForm = <T extends FieldValues>({
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
+                          className=" bg-primary border-light-100 data-[state=checked]:text-white"
                         />
-                        <span className="text-primary">Remember me</span>
-                      </div>
-                    ) : field.name === "password" ? (
-                      <div className="relative">
-                        <Input
-                          required
-                          type={showPassword ? "text" : "password"}
-                          placeholder={field.name}
-                          {...field}
-                        />
-                        <button
-                          type="button"
-                          onClick={togglePasswordVisibility}
-                          className="absolute right-3 top-2 text-primary"
-                        >
-                          {showPassword ? (
-                            <Image
-                              src="/icons/eye-open-icon.svg"
-                              width={20}
-                              height={20}
-                              alt="Show password"
-                            />
-                          ) : (
-                            <Image
-                              src="/icons/eye-closed-icon.svg"
-                              width={20}
-                              height={20}
-                              alt="Hide password"
-                            />
-                          )}
-                        </button>
+                        <span className="text-blue-100">Remember me</span>
                       </div>
                     ) : (
-                      <Input
-                        required
-                        type={
-                          FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
-                        }
-                        placeholder={field.name}
-                        {...field}
-                      />
+                      <div className="relative flex items-center">
+                        <div className="absolute left-3">
+                          <Image
+                            src={`/icons/${field.name}-icon.svg`}
+                            width={20}
+                            height={20}
+                            alt={`${field.name} icon`}
+                          />
+                        </div>
+                        <Input
+                          type={
+                            (field.name === "password" || field.name === "confirmPassword")
+                              ? showPassword
+                                ? "text"
+                                : "password"
+                              : FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
+                          }
+                          placeholder= {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
+                          {...field}
+                          className="pl-10 bg-white rounded-2xl text-primary text-base"
+                        />
+                        {(field.name === "password" || field.name === "confirmPassword") && (
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute right-3 top-2 text-primary"
+                          >
+                            {showPassword ? (
+                              <Image
+                                src="/icons/eye-open-icon.svg"
+                                width={20}
+                                height={20}
+                                alt="Show password"
+                              />
+                            ) : (
+                              <Image
+                                src="/icons/eye-closed-icon.svg"
+                                width={20}
+                                height={20}
+                                alt="Hide password"
+                              />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </FormControl>
                   {isLogIn && field.name === "password" && (
@@ -142,38 +150,35 @@ const AuthForm = <T extends FieldValues>({
                       </Link>
                     </div>
                   )}
-                  <FormMessage />
+                  <FormMessage className="text-red"/>
                 </FormItem>
               )}
             />
           ))}
 
-          <Button type="submit" className="w-full bg-primary text-yellow">
-            {isLogIn ? "Log In" : "Sign Up"}
+          <Button type="submit" className="w-full bg-yellow text-primary rounded-full font-bold text-lg hover:bg-yellow hover:text-primary py-4 px-8">
+            {isLogIn ? "Log In" : "Create an account"}
           </Button>
         </form>
       </Form>
-      <p className="text-primary text-center">Or continue with</p>
+      <p className="text-light-100 font-normal text-center">Or continue with</p>
       <div className="flex flex-row gap-2 justify-center">
         {["google", "facebook", "apple"].map((platform) => (
-          <Button
-            key={platform}
-            className="bg-white"
-          >
+          <Button key={platform} className="bg-white hover:bg-white px-10 py-6 rounded-3xl">
             <Image
               src={`/icons/${platform}-icon.svg`}
-              width={20}
-              height={20}
+              width={24}
+              height={24}
               alt={`${platform} icon`}
             />
           </Button>
         ))}
       </div>
       <div className="flex flex-row gap-2 justify-center">
-        <Link href="/terms" className="text-blue-100 text-center">
+        <Link href="/terms" className="text-blue-100 text-center text-xs">
           Terms & Conditions
         </Link>
-        <Link href="/privacy" className="text-blue-100 text-center">
+        <Link href="/privacy" className="text-blue-100 text-center text-xs">
           Privacy Policy
         </Link>
       </div>
