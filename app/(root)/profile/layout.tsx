@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
-  console.log(session);
-
-  if (session) redirect("/log-in");
+  
+  if (!session) redirect("/log-in");
 
   return <div>{children}</div>;
 };

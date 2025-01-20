@@ -8,7 +8,7 @@ export const logInWithCredentials = async (params: Pick<AuthCredentials, 'email'
     const {email, password} = params;
     
     try {
-        const result = await signIn("credentials", {email, password, redirect: false});
+        const result = await signIn('credentials', {email, password, redirect: false});
 
         if(result?.error) {
             return {success: false, error: result.error};
@@ -36,7 +36,7 @@ export const signUp = async (params: AuthCredentials) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: password,
+            password: hashedPassword,
         });
         
         await logInWithCredentials({email, password});
