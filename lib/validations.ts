@@ -4,20 +4,15 @@ export const signUpSchema = z
   .object({
     firstName: z.string().nonempty({ message: "First name is required." }),
     lastName: z.string().nonempty({ message: "Last name is required." }),
-    email: z
-      .string()
-      .email({ message: "Please enter a valid email address." }),
+    email: z.string().email({ message: "Please enter a valid email address." }),
     password: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters long." })
+      .min(6, { message: "Password must be at least 6 characters long." })
       .regex(/[A-Z]/, {
         message: "Password must contain at least one uppercase letter.",
       })
       .regex(/[a-z]/, {
         message: "Password must contain at least one lowercase letter.",
-      })
-      .regex(/[@$!%*?&#_]/, {
-        message: "Password must contain at least one special character.",
       }),
     confirmPassword: z.string(),
   })
@@ -28,6 +23,8 @@ export const signUpSchema = z
 
 export const logInSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
-  password: z.string().min(8, {message: "Password must contain at least 8 characters."}),
+  password: z
+    .string()
+    .min(6, { message: "Password must contain at least 6 characters." }),
   rememberMe: z.boolean().optional(),
 });

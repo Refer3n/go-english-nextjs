@@ -1,66 +1,89 @@
-import NextAuth, { User } from "next-auth";
-import { compare } from "bcryptjs";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { findUserByEmail } from "./lib/database";
+import api from "./lib/api";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+      accessToken: string;
+    };
+  }
+
+  interface User {
+    accessToken: string;
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
   },
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`, 
-      options: {
-        httpOnly: true, 
-        secure: true,
-        sameSite: "lax", 
-      },
-    },
-  },
   providers: [
     CredentialsProvider({
-        async authorize(credentials) {
-            if (!credentials?.email || !credentials?.password) {
-                return null;
-            }
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
+        }
 
-            const user = findUserByEmail(credentials.email.toString());
+        try {
+          const { data: loginData } = await api.post("/auth/login", {
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-            if (!user) return null;
+          const token = loginData?.token;
 
-            const isPasswordValid = await compare(
-                credentials.password.toString(),
-                user.password
-            );
+          if (!token) {
+            throw new Error("Failed to retrieve token");
+          }
 
-            if (!isPasswordValid) return null;
+          const { data: userData } = await api.get(
+            `/user/getuserbyemail?email=${credentials.email}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            },
+          );
 
-            return {
-                id: user.id.toString(),
-                email: user.email,
-            } as User;
-        },
+          return {
+            id: userData.id.toString(),
+            email: userData.email,
+            name: `${userData.firstName} ${userData.lastName}`,
+            accessToken: token,
+          };
+        } catch (error: any) {
+          console.error(
+            "Authorization error:",
+            error.response?.data || error.message,
+          );
+          throw new Error("Login failed");
+        }
+      },
     }),
   ],
-  pages: {
-    signIn: "/log-in",
-  },
   callbacks: {
-    async jwt( {token, user}) {
-        if(user) {
-            token.id = user.id;
-            token.name = user.id;
-        }
-
-        return token;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.accessToken = user.accessToken;
+      }
+      return token;
     },
     async session({ session, token }) {
-        if (session.user) {
-          session.user.id = token.id as string;
-          session.user.name = token.name as string;
-        }
-  
-        return session;
-    }
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
+        session.user.accessToken = token.accessToken as string;
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/log-in",
   },
 });
