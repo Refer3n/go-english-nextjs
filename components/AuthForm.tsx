@@ -27,6 +27,7 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from "./ui/checkbox";
 import { useRouter } from "next/navigation";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 interface Props<T extends FieldValues> {
   type: "LOG_IN" | "SIGN_UP";
@@ -77,8 +78,8 @@ const AuthForm = <T extends FieldValues>({
         </Link>
       </p>
       {errorMessage && (
-            <div className="p-10 text-center text-red">{errorMessage}</div>
-          )}
+        <div className="p-10 text-center text-red">{errorMessage}</div>
+      )}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -184,7 +185,7 @@ const AuthForm = <T extends FieldValues>({
       </Form>
       <p className="text-light-100 font-normal text-center">Or continue with</p>
       <div className="flex flex-row gap-2 justify-center">
-        {["google", "facebook", "apple"].map((platform) => (
+        {/* {["google", "facebook", "apple"].map((platform) => (
           <Button
             key={platform}
             className="bg-white hover:bg-white px-10 py-6 rounded-3xl"
@@ -196,7 +197,8 @@ const AuthForm = <T extends FieldValues>({
               alt={`${platform} icon`}
             />
           </Button>
-        ))}
+        ))} */}
+        <GoogleSignInButton />
       </div>
       <div className="flex flex-row gap-2 justify-center">
         <Link href="/terms" className="text-blue-100 text-center text-xs">

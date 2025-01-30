@@ -1,7 +1,11 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const page = () => {
+  const session = useSession();
+
   return (
     <div>
       page
@@ -10,6 +14,9 @@ const page = () => {
         {" "}
         Sign out
       </Button>
+      <pre>{session.data?.user.id}</pre>
+      <pre>{session.data?.user.name}</pre>
+      <pre>{session.data?.user.email}</pre>
     </div>
   );
 };

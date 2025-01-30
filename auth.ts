@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import api from "./lib/api";
+import { parseJwt } from "./lib/utils";
 
 declare module "next-auth" {
   interface Session {
@@ -23,7 +24,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   providers: [
     CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+        googleToken: { label: "Google Token", type: "text" },
+      },
       async authorize(credentials) {
+        if (credentials?.googleToken) {
+          try {
+            const decoded = parseJwt(credentials.googleToken as string);
+            if (!decoded?.email) throw new Error("Invalid Google token");
+
+            const { data: loginData } = await api.post("/auth/signin-google", {
+              googleToken: credentials.googleToken,
+            });
+
+            const token = loginData?.token;
+            if (!token) throw new Error("Google auth failed");
+
+            const { data: userData } = await api.get(
+              `/user/getuserbyemail?email=${decoded.email}`,
+              { headers: { Authorization: `Bearer ${token}` } },
+            );
+
+            return {
+              id: userData.id.toString(),
+              email: userData.email,
+              name: `${userData.firstName} ${userData.lastName}`,
+              accessToken: token,
+            };
+          } catch (error) {
+            console.error("Google auth error:", error);
+            return null;
+          }
+        }
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
@@ -35,16 +71,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
 
           const token = loginData?.token;
-
-          if (!token) {
-            throw new Error("Failed to retrieve token");
-          }
+          if (!token) throw new Error("Invalid credentials");
 
           const { data: userData } = await api.get(
             `/user/getuserbyemail?email=${credentials.email}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            },
+            { headers: { Authorization: `Bearer ${token}` } },
           );
 
           return {
@@ -54,10 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             accessToken: token,
           };
         } catch (error: any) {
-          console.error(
-            "Authorization error:",
-            error.response?.data || error.message,
-          );
+          console.error("Auth error:", error.response?.data || error.message);
           throw new Error("Login failed");
         }
       },
