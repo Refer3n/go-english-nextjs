@@ -3,8 +3,7 @@
 import AuthForm from "@/components/AuthForm";
 import React from "react";
 import { signUpSchema } from "@/lib/validations";
-import { logInWithCredentials } from "@/lib/actions/auth";
-// import { signUp } from "@/lib/actions/auth";
+import { signUp } from "@/lib/actions/auth";
 
 const page = () => (
   <AuthForm
@@ -17,7 +16,7 @@ const page = () => (
       password: "",
       confirmPassword: "",
     }}
-    onSubmit={logInWithCredentials /* signUp */}
+    onSubmit={signUp}
   />
 );
 

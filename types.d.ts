@@ -1,6 +1,7 @@
 interface AuthCredentials {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  }
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  registrationToken: string;
+}

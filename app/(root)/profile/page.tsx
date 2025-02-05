@@ -16,6 +16,7 @@ const page = () => {
       </Button>
       <pre>{session.data?.user.id}</pre>
       <pre>{session.data?.user.name}</pre>
+      <pre>{session.data?.user.lastname}</pre>
       <pre>{session.data?.user.email}</pre>
     </div>
   );

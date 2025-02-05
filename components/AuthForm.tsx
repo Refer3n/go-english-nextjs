@@ -28,6 +28,7 @@ import Image from "next/image";
 import { Checkbox } from "./ui/checkbox";
 import { useRouter } from "next/navigation";
 import { GoogleSignInButton } from "./GoogleSignInButton";
+import LegalLinks from "./LegalLinks";
 
 interface Props<T extends FieldValues> {
   type: "LOG_IN" | "SIGN_UP";
@@ -55,10 +56,14 @@ const AuthForm = <T extends FieldValues>({
   const handleSubmit: SubmitHandler<T> = async (data) => {
     const result = await onSubmit(data);
     if (!result.success) {
-      setErrorMessage("Incorrect email or password. Please try again.");
+      setErrorMessage(result.error || "Error");
     } else {
       setErrorMessage(null);
-      router.push("/profile");
+      if (isLogIn) {
+        router.push("/profile");
+      } else {
+        router.push("/check-email");
+      }
     }
   };
 
@@ -200,14 +205,7 @@ const AuthForm = <T extends FieldValues>({
         ))} */}
         <GoogleSignInButton />
       </div>
-      <div className="flex flex-row gap-2 justify-center">
-        <Link href="/terms" className="text-blue-100 text-center text-xs">
-          Terms & Conditions
-        </Link>
-        <Link href="/privacy" className="text-blue-100 text-center text-xs">
-          Privacy Policy
-        </Link>
-      </div>
+      <LegalLinks />
     </div>
   );
 };

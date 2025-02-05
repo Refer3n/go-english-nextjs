@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
 
-  if(session) redirect("/profile");
+  if (session) redirect("/profile");
 
   return (
     <main className="auth-container">
