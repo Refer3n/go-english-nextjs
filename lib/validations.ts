@@ -28,3 +28,14 @@ export const logInSchema = z.object({
     .min(6, { message: "Password must contain at least 6 characters." }),
   rememberMe: z.boolean().optional(),
 });
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email address." }),
+});
+
+export const confirmResetPasswordSchema = z.object({
+  token: z.string(),
+  password: z
+    .string()
+    .min(6, { message: "Password must contain at least 6 characters." }),
+});

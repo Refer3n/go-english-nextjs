@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import LegalLinks from "@/components/LegalLinks";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/auth";
 import { logInWithRegistrationToken } from "@/lib/actions/auth";
 
 const VerifyPage = () => {

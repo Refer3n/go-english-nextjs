@@ -88,3 +88,50 @@ export const signUp = async (
 
   return { success: true };
 };
+
+export const resetPassword = async (params: Pick<PasswordReset, "email">) => {
+  const { email } = params;
+
+  try {
+    const result = await api.post("/auth/reset-password", {
+      email: email,
+    });
+
+    if (result?.status !== 200) {
+      return { success: false, error: result.data };
+    }
+  } catch (error: any) {
+    console.error(
+      "Reset password error:",
+      error.response?.data || error.message,
+    );
+    return { success: false, error: error.response?.data };
+  }
+
+  return { success: true };
+};
+
+export const confirmResetPassword = async (
+  params: Pick<PasswordReset, "password" | "token">,
+) => {
+  const { password, token } = params;
+
+  try {
+    const result = await api.post("/auth/confirm-reset", {
+      newPassword: password,
+      token: token,
+    });
+
+    if (result?.status !== 200) {
+      return { success: false, error: result.data };
+    }
+  } catch (error: any) {
+    console.error(
+      "Confirm reset password error:",
+      error.response?.data || error.message,
+    );
+    return { success: false, error: error.response?.data };
+  }
+
+  return { success: true };
+};

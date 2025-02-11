@@ -5,3 +5,9 @@ interface AuthCredentials {
   password: string;
   registrationToken: string;
 }
+
+interface PasswordReset {
+  email: string;
+  password: string;
+  token: string | null;
+}
