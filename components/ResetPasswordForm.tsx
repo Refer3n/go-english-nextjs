@@ -22,29 +22,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Image from "next/image";
-import { Checkbox } from "./ui/checkbox";
 import { useRouter } from "next/navigation";
-import { GoogleSignInButton } from "./GoogleSignInButton";
 import LegalLinks from "./LegalLinks";
 
 interface Props<T extends FieldValues> {
-  type: "LOG_IN" | "SIGN_UP";
+  type: "RESET_PASSWORD" | "CONFIRM_RESET_PASSWORD";
   schema: ZodType<T>;
   defaultValues: T;
   onSubmit: (data: T) => Promise<{ success: boolean; error?: string }>;
 }
 
-const AuthForm = <T extends FieldValues>({
+const ResetPasswordForm = <T extends FieldValues>({
   type,
   schema,
   defaultValues,
   onSubmit,
 }: Props<T>) => {
   const router = useRouter();
-  const isLogIn = type === "LOG_IN";
+  const isConfirmMode = type === "CONFIRM_RESET_PASSWORD";
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -59,10 +56,10 @@ const AuthForm = <T extends FieldValues>({
       setErrorMessage(result.error || "Error");
     } else {
       setErrorMessage(null);
-      if (isLogIn) {
-        router.push("/profile");
+      if (isConfirmMode) {
+        router.push("/log-in");
       } else {
-        router.push("/check-email");
+        router.push(`/check-email?mode=reset`);
       }
     }
   };
@@ -74,15 +71,24 @@ const AuthForm = <T extends FieldValues>({
   return (
     <div className="auth-form-container">
       <h1 className="auth-heading">
-        {isLogIn ? "Log in to Go English" : "Welcome to Go English"}
+        {isConfirmMode ? "Password Reset" : "Forgotten Password"}
       </h1>
-      <p className="auth-subtext">
-        {isLogIn ? "Don't have an account? " : "Already have a profile? "}
-        <Link className="text-yellow" href={isLogIn ? "/sign-up" : "/log-in"}>
-          {isLogIn ? "Sign up" : "Log in"}
-        </Link>
-      </p>
-      {errorMessage && <div className="auth-error">{errorMessage}</div>}
+
+      {isConfirmMode ? (
+        <p className="auth-subtext px-4">
+          Almost done! Enter your new password and try to remember it this time.
+        </p>
+      ) : (
+        <p className="auth-subtext px-4">
+          Oh dear. You forgot your password.
+          <br />
+          Don't worry! Let's reset your password.
+        </p>
+      )}
+
+      {errorMessage && (
+        <div className="p-10 text-center text-red">{errorMessage}</div>
+      )}
 
       <Form {...form}>
         <form
@@ -90,29 +96,36 @@ const AuthForm = <T extends FieldValues>({
           className="space-y-5 w-full"
           noValidate
         >
-          {Object.keys(defaultValues).map((field) => (
-            <FormField
-              key={field}
-              control={form.control}
-              name={field as Path<T>}
-              render={({ field }) => (
-                <FormItem>
-                  {field.name !== "rememberMe" && (
+          {Object.keys(defaultValues).map((field) => {
+            if (field === "token") {
+              return (
+                <FormField
+                  key={field}
+                  control={form.control}
+                  name={field as Path<T>}
+                  render={({ field }) => (
+                    <FormItem className="hidden">
+                      <FormControl>
+                        <Input type="hidden" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              );
+            }
+
+            return (
+              <FormField
+                key={field}
+                control={form.control}
+                name={field as Path<T>}
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel className="capitalize text-light-100 font-normal">
                       {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                     </FormLabel>
-                  )}
-                  <FormControl>
-                    {field.name === "rememberMe" ? (
-                      <div className="flex items-center space-x-3">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={(value) => field.onChange(value)}
-                          className=" bg-primary border-light-100 data-[state=checked]:text-white"
-                        />
-                        <span className="text-blue-100">Remember me</span>
-                      </div>
-                    ) : (
+
+                    <FormControl>
                       <div className="auth-input-container">
                         <div className="icon-left">
                           <Image
@@ -164,36 +177,26 @@ const AuthForm = <T extends FieldValues>({
                           </button>
                         )}
                       </div>
-                    )}
-                  </FormControl>
-                  {isLogIn && field.name === "password" && (
-                    <div className="text-left mt-1">
-                      <Link href="/forgot-password" className="text-blue-100">
-                        Forgot Password?
-                      </Link>
-                    </div>
-                  )}
-                  <FormMessage className="text-red" />
-                </FormItem>
-              )}
-            />
-          ))}
+                    </FormControl>
+                    <FormMessage className="text-red" />
+                  </FormItem>
+                )}
+              />
+            );
+          })}
 
           <Button
             type="submit"
             className="auth-button hover:bg-yellow hover:text-primary"
           >
-            {isLogIn ? "Log In" : "Create an account"}
+            {isConfirmMode ? "Change Password" : "Reset Password"}
           </Button>
         </form>
       </Form>
-      <p className="text-light-100 font-normal text-center">Or continue with</p>
-      <div className="flex flex-row gap-2 justify-center">
-        <GoogleSignInButton />
-      </div>
+
       <LegalLinks />
     </div>
   );
 };
 
-export default AuthForm;
+export default ResetPasswordForm;

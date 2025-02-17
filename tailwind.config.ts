@@ -27,6 +27,7 @@ export default {
         },
         light: {
           100: "#F6F6FC",
+          200: "#F6DDDD",
         },
       },
       screens: {
@@ -39,6 +40,8 @@ export default {
       },
       backgroundImage: {
         pattern: "url('/images/pattern.webp')",
+        gradientLine:
+          "linear-gradient(to right, rgba(66, 133, 244, 0) 0%, rgba(66, 133, 244, 0.4) 50%, rgba(66, 133, 244, 0) 100%)",
       },
     },
   },
