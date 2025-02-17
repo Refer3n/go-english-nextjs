@@ -38,8 +38,8 @@ const VerifyPage = () => {
   }, [searchParams, router]);
 
   return (
-    <div className="flex flex-col gap-4 w-[340px] max-h-[100vh] overflow-y-scroll hide-scrollbar pb-3 pt-5">
-      <h1 className="text-2xl font-bold leading-6 text-yellow text-center">
+    <div className="auth-form-container">
+      <h1 className="auth-heading">
         {loading
           ? "Verifying your account..."
           : error

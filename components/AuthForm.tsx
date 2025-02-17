@@ -72,19 +72,18 @@ const AuthForm = <T extends FieldValues>({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-[340px] max-h-[100vh] overflow-y-scroll hide-scrollbar pb-3 pt-5">
-      <h1 className="text-2xl font-bold leading-6 text-yellow text-center mt-5">
+    <div className="auth-form-container">
+      <h1 className="auth-heading">
         {isLogIn ? "Log in to Go English" : "Welcome to Go English"}
       </h1>
-      <p className="text-light-100 leading-6 text-center">
+      <p className="auth-subtext">
         {isLogIn ? "Don't have an account? " : "Already have a profile? "}
         <Link className="text-yellow" href={isLogIn ? "/sign-up" : "/log-in"}>
           {isLogIn ? "Sign up" : "Log in"}
         </Link>
       </p>
-      {errorMessage && (
-        <div className="p-10 text-center text-red">{errorMessage}</div>
-      )}
+      {errorMessage && <div className="auth-error">{errorMessage}</div>}
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -108,14 +107,14 @@ const AuthForm = <T extends FieldValues>({
                       <div className="flex items-center space-x-3">
                         <Checkbox
                           checked={field.value}
-                          onCheckedChange={field.onChange}
+                          onCheckedChange={(value) => field.onChange(value)}
                           className=" bg-primary border-light-100 data-[state=checked]:text-white"
                         />
                         <span className="text-blue-100">Remember me</span>
                       </div>
                     ) : (
-                      <div className="relative flex items-center">
-                        <div className="absolute left-3">
+                      <div className="auth-input-container">
+                        <div className="icon-left">
                           <Image
                             src={`/icons/${field.name}-icon.svg`}
                             width={20}
@@ -138,14 +137,14 @@ const AuthForm = <T extends FieldValues>({
                             FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]
                           }
                           {...field}
-                          className="pl-10 bg-white rounded-2xl text-primary text-base"
+                          className="auth-input"
                         />
                         {(field.name === "password" ||
                           field.name === "confirmPassword") && (
                           <button
                             type="button"
                             onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-2 text-primary"
+                            className="toggle-password"
                           >
                             {showPassword ? (
                               <Image
@@ -182,7 +181,7 @@ const AuthForm = <T extends FieldValues>({
 
           <Button
             type="submit"
-            className="w-full bg-yellow text-primary rounded-full font-bold text-lg hover:bg-yellow hover:text-primary py-4 px-8"
+            className="auth-button hover:bg-yellow hover:text-primary"
           >
             {isLogIn ? "Log In" : "Create an account"}
           </Button>

@@ -69,19 +69,17 @@ const ResetPasswordForm = <T extends FieldValues>({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-[340px] max-h-[100vh] overflow-y-scroll hide-scrollbar pb-3 pt-5">
-      {/* Заголовок */}
-      <h1 className="text-2xl font-bold leading-6 text-yellow text-center mt-5">
+    <div className="auth-form-container">
+      <h1 className="auth-heading">
         {isConfirmMode ? "Password Reset" : "Forgotten Password"}
       </h1>
 
-      {/* Подзаголовок */}
       {isConfirmMode ? (
-        <p className="text-light-100 leading-6 text-center px-4">
+        <p className="auth-subtext px-4">
           Almost done! Enter your new password and try to remember it this time.
         </p>
       ) : (
-        <p className="text-light-100 leading-6 text-center px-4">
+        <p className="auth-subtext px-4">
           Oh dear. You forgot your password.
           <br />
           Don't worry! Let's reset your password.
@@ -92,7 +90,6 @@ const ResetPasswordForm = <T extends FieldValues>({
         <div className="p-10 text-center text-red">{errorMessage}</div>
       )}
 
-      {/* Форма */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -100,7 +97,6 @@ const ResetPasswordForm = <T extends FieldValues>({
           noValidate
         >
           {Object.keys(defaultValues).map((field) => {
-            // Скрываем поле token
             if (field === "token") {
               return (
                 <FormField
@@ -130,8 +126,8 @@ const ResetPasswordForm = <T extends FieldValues>({
                     </FormLabel>
 
                     <FormControl>
-                      <div className="relative flex items-center">
-                        <div className="absolute left-3">
+                      <div className="auth-input-container">
+                        <div className="icon-left">
                           <Image
                             src={`/icons/${field.name}-icon.svg`}
                             width={20}
@@ -154,14 +150,14 @@ const ResetPasswordForm = <T extends FieldValues>({
                             FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]
                           }
                           {...field}
-                          className="pl-10 bg-white rounded-2xl text-primary text-base"
+                          className="auth-input"
                         />
                         {(field.name === "password" ||
                           field.name === "confirmPassword") && (
                           <button
                             type="button"
                             onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-2 text-primary"
+                            className="toggle-password"
                           >
                             {showPassword ? (
                               <Image
@@ -189,10 +185,9 @@ const ResetPasswordForm = <T extends FieldValues>({
             );
           })}
 
-          {/* Кнопка отправки */}
           <Button
             type="submit"
-            className="w-full bg-yellow text-primary rounded-full font-bold text-lg hover:bg-yellow hover:text-primary py-4 px-8"
+            className="auth-button hover:bg-yellow hover:text-primary"
           >
             {isConfirmMode ? "Change Password" : "Reset Password"}
           </Button>
