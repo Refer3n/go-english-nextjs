@@ -9,11 +9,14 @@ const Logo = ({ size = "md" }: LogoProps) => {
   const imageSize = size === "sm" ? 16 : 24;
   const padding = size === "sm" ? "p-2" : "p-4";
   const margin = size === "sm" ? "mb-2" : "mb-4";
+  const width = size === "sm" ? "w-4" : "w-6";
+  const gap = size === "sm" ? "gap-1.5" : "gap-2";
+  const marginLeft = size === "sm" ? "ml-1.5" : "ml-2";
 
   return (
     <div className={`text-center ${padding}`}>
-      <div className={`flex flex-col align-items-start ${margin}`}>
-        <div className="flex gap-2 mb-1">
+      <div className={`flex flex-col ${margin}`}>
+        <div className={`flex ${gap} mb-1`}>
           {Array(2)
             .fill(0)
             .map((_, index) => (
@@ -27,16 +30,21 @@ const Logo = ({ size = "md" }: LogoProps) => {
               />
             ))}
         </div>
+
         <div className="flex items-center">
-          <span className={`w-6 text-light-100 font-bold ${textSize}`}>G</span>
+          <span className={`${width} text-light-100 font-bold ${textSize}`}>
+            G
+          </span>
           <Image
             src="/circle.svg"
             alt="Circle"
             width={imageSize}
             height={imageSize}
-            className="mt-0.5 ml-2"
+            className={marginLeft}
           />
-          <span className={`font-bold text-light-100 w-6 ml-3 ${textSize}`}>
+          <span
+            className={`${width} font-bold text-light-100 ml-3 ${textSize}`}
+          >
             English
           </span>
         </div>

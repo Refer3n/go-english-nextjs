@@ -73,8 +73,16 @@
     @apply pl-10 bg-white rounded-2xl text-primary text-base;
   }
 
+  .search-input {
+    @apply w-[35vw] bg-light-400 rounded-full !text-xl text-gray-100 placeholder:text-xl placeholder:text-light-300 font-normal py-4 px-8 h-14;
+  }
+
   .icon-left {
     @apply absolute left-3;
+  }
+
+  .icon-right {
+    @apply absolute right-5;
   }
 
   .toggle-password {
@@ -82,7 +90,31 @@
   }
 
   .auth-button {
-    @apply w-full bg-yellow text-primary rounded-full font-bold text-lg py-4 px-8;
+    @apply w-full bg-yellow text-primary rounded-full font-bold text-lg px-8;
+  }
+
+  .button {
+    @apply bg-yellow text-primary rounded-full font-medium text-base px-6 py-4
+  }
+
+  .nav-item {
+    @apply text-xl text-black-100 font-semibold
+  }
+
+  .main-section {
+    @apply relative h-[calc(100vh-11rem)] mb-14
+  }
+
+  .main-section-colored {
+    @apply main-section relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-[60%] before:bg-gray-300 before:-z-10
+  }
+
+  .heading {
+    @apply text-4xl text-primary font-bold
+  }
+
+  .link-text {
+    @apply text-blue-200 hover:underline
   }
 }
 

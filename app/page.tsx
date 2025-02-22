@@ -1,13 +1,23 @@
 "use client";
 
+import Header from "@/components/Header";
+import AboutSection from "@/components/mainPageSections/AboutSection";
+import BlogSection from "@/components/mainPageSections/BlogSection";
+import CourseSection from "@/components/mainPageSections/CourseSection";
+import FeedBackSection from "@/components/mainPageSections/FeedbackSection";
+import HeroSection from "@/components/mainPageSections/HeroSection";
+import OfferSection from "@/components/mainPageSections/OfferSection";
+
 const Home = () => {
   return (
     <div>
-      <h1>Home</h1>
-      <br />
-      <a href="/log-in">Log in</a>
-      <br />
-      <a href="/sign-up">Sign up</a>
+      <Header></Header>
+      <HeroSection></HeroSection>
+      <AboutSection></AboutSection>
+      <OfferSection></OfferSection>
+      <CourseSection></CourseSection>
+      <FeedBackSection></FeedBackSection>
+      <BlogSection></BlogSection>
     </div>
   );
 };
