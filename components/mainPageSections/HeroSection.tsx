@@ -27,12 +27,6 @@ export default function HeroSection() {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
   };
 
-  const prevSlide = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + slides.length) % slides.length
-    );
-  };
-
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
@@ -43,9 +37,9 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="main-section">
+    <section className="main-section h-[calc(100vh-11rem)]">
       <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] h-full">
-        <div className="relative flex flex-col justify-center pl-[15%] bg-primary h-full gap-6">
+      <div className="relative flex flex-col justify-center items-start bg-primary h-full gap-6 px-8 lg:px-16">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
             Master English,
             <br />
@@ -77,12 +71,11 @@ export default function HeroSection() {
           </div>
 
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
-            {/* Using the Pagination component here */}
             <Pagination
-              currentPage={currentIndex + 1} // Adjust to 1-based index for pagination
+              currentPage={currentIndex + 1}
               totalItems={slides.length}
-              itemsPerPage={1} // Always 1 per page in this case
-              onPageChange={(page) => goToSlide(page - 1)} // Adjust back to 0-based index
+              itemsPerPage={1} 
+              onPageChange={(page) => goToSlide(page - 1)} 
             />
           </div>
         </div>

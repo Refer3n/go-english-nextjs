@@ -6,7 +6,7 @@ import FeedbackList from "../feedbacks/FeedbackList";
 
 export default function FeedBackSection() {
   return (
-    <section className="main-section !mb-0">
+    <section className="main-section !h-auto">
       <div className="flex flex-col mx-[10vw]">
         <h2 className="heading mb-10">Be Inspired</h2>
         <FeedbackList></FeedbackList>

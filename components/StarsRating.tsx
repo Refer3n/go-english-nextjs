@@ -23,12 +23,12 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, maxStars = 5 }) => {
           <span className="absolute overflow-hidden w-[50%] left-0">
             ★
           </span>
-          <span className="text-gray-300">★</span>
+          <span className="text-gray-200">★</span>
         </span>
       )}
 
       {Array.from({ length: emptyStars }).map((_, index) => (
-        <span key={`empty-${index}`} className="text-2xl text-gray-300">
+        <span key={`empty-${index}`} className="text-2xl text-gray-200">
           ★
         </span>
       ))}

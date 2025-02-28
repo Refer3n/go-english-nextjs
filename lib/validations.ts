@@ -39,3 +39,10 @@ export const confirmResetPasswordSchema = z.object({
     .string()
     .min(6, { message: "Password must contain at least 6 characters." }),
 });
+
+export const notificationSchema = z.object({
+  email: z.string().email( {message: "Please enter a valid email address."}),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms",
+  }),
+})

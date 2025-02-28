@@ -6,7 +6,7 @@ import BlogList from "../blog/BlogList";
 
 export default function BlogSection() {
   return (
-    <section className="main-section bg-gray-300 py-6 !mb-0">
+    <section className="main-section bg-gray-300 py-6">
       <div className="flex flex-col mx-[10vw]">
         <h2 className="heading mb-4">Latest from The Blog</h2>
         <Link href="/blog" className="link-text flex items-center ml-auto mb-6">

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import CourseCard from "./CourseCard"; 
 import Pagination from "../Pagination"; // Import the Pagination component
+import fetchData from "@/lib/actions/fetchData";
 
 interface Course {
   id: number;
@@ -12,6 +12,10 @@ interface Course {
   level: string;
   price: number;
   lessonsCount: number;
+  modulesCount: number;
+  rating: number;
+  feedbacksNumber: number;
+  estimatedTimeInMinutes: number;
 }
 
 interface CourseListProps {
@@ -27,15 +31,13 @@ const CourseList: React.FC<CourseListProps> = ({ itemsPerPage, sortBy }) => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/Course/GetCoursesInfo`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const courses: Course[] = await fetchData<Course>("Course/GetCoursesInfo", "en");
 
         const startIndex = (currentPage - 1) * itemsPerPage;
-        const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
+        const paginatedData = courses.slice(startIndex, startIndex + itemsPerPage);
 
         setCourses(paginatedData);
-        setTotalCourses(data.length);
+        setTotalCourses(courses.length);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -52,18 +54,11 @@ const CourseList: React.FC<CourseListProps> = ({ itemsPerPage, sortBy }) => {
   });
 
   return (
-    <div className="flex flex-col gap-8 justify-center">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="flex flex-col justify-center">
+      <div className="flex flex-row justify-between items-center mb-10 w-full">
         {sortedCourses.map((course) => (
           <CourseCard
-            key={course.id}
-            image="/images/default.jpg" 
-            name={course.title} 
-            level={course.level}
-            lessons={course.lessonsCount}
-            rating={4.4} 
-            feedbackCount={100} 
-            onViewLink={`/course/${course.id}`}
+          key={course.id} course={course}
           />
         ))}
       </div>

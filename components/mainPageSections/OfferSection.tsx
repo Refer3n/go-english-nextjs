@@ -95,7 +95,7 @@ export default function OfferSection() {
   }, [api]);
 
   return (
-    <section className="main-section-colored">
+    <section className="main-section-colored pb-14">
       <div className="flex flex-col gap-8 justify-center mx-[10vw]">
         <h2 className="heading text-start">
           What We are Offer

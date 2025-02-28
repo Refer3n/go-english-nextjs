@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import FeedbackCard from "./FeedbackCard";
+import fetchData from "@/lib/actions/fetchData";
 
 interface Feedback {
   id: number;
@@ -24,12 +24,19 @@ const FeedbackList: React.FC = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/Feedback/GetFeedbacks`;
-        const response = await axios.get(apiUrl);
-        const data: Feedback[] = response.data;
+        const feedbacks: Feedback[] = await fetchData<Feedback>(
+          "Feedback/GetFeedbacks",
+          "en"
+        );
 
-        const sortedFeedbacks = data
-          .sort((a, b) => (b.date && a.date ? new Date(b.date).getTime() - new Date(a.date).getTime() : 0))
+        console.log(feedbacks);
+
+        const sortedFeedbacks = feedbacks
+          .sort((a, b) =>
+            b.date && a.date
+              ? new Date(b.date).getTime() - new Date(a.date).getTime()
+              : 0
+          )
           .slice(0, 4);
 
         setFeedbacks(sortedFeedbacks);
@@ -42,12 +49,11 @@ const FeedbackList: React.FC = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-between mx-auto items-center w-full">
-    {feedbacks.map((feedback) => (
-      <FeedbackCard key={feedback.id} feedback={feedback} />
-    ))}
-  </div>
-  
+    <div className="grid w-full gap-6 px-4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 justify-items-center">
+      {feedbacks.map((feedback) => (
+        <FeedbackCard key={feedback.id} feedback={feedback} />
+      ))}
+    </div>
   );
 };
 

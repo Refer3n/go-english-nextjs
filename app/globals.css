@@ -102,7 +102,7 @@
   }
 
   .main-section {
-    @apply relative h-[calc(100vh-11rem)] mb-14
+    @apply relative mb-14
   }
 
   .main-section-colored {

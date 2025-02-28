@@ -17,12 +17,10 @@ interface BlogCardProps {
 const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
   const { id, title, description, image } = blog;
 
-  // Truncate description to a maximum of 100 characters
   const truncatedDescription = description.length > 100 ? `${description.slice(0, 100)}...` : description;
 
   return (
     <div className="bg-transparent p-6 flex flex-col gap-3 w-[300px] h-[400px]">
-      {/* Image takes up the remaining space */}
       <div className="relative w-full h-[250px] flex-grow">
         <Image
           src={image || "/images/default3.jpg"}

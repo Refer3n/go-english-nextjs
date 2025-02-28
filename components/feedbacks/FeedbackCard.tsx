@@ -3,7 +3,6 @@
 import type React from "react"
 import { useState } from "react"
 import Image from "next/image"
-import { Star } from "lucide-react"
 import StarRating from "../StarsRating"
 
 interface User {
@@ -19,7 +18,6 @@ interface Feedback {
   rating: number
   comments: string
   user: User
-  date?: string
 }
 
 interface FeedbackCardProps {
@@ -27,10 +25,10 @@ interface FeedbackCardProps {
 }
 
 const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
-  const { rating, comments, user, date } = feedback
-  const [expanded, setExpanded] = useState(false)
-  const truncatedComments = comments.length > 100 ? `${comments.slice(0, 100)}...` : comments
-  const formattedDate = date ? new Date(date).toLocaleDateString() : "29.11.2024"
+  const { rating, comments, user } = feedback;
+  const [expanded, setExpanded] = useState(false);
+  const truncatedComments = comments.length > 100 ? `${comments.slice(0, 100)}...` : comments;
+  const formattedDate = "29.11.2024";
 
   return (
     <div className="relative bg-gray-300 shadow-xl rounded-2xl p-6 w-full max-w-lg">

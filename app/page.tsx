@@ -1,5 +1,6 @@
 "use client";
 
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import AboutSection from "@/components/mainPageSections/AboutSection";
 import BlogSection from "@/components/mainPageSections/BlogSection";
@@ -18,6 +19,7 @@ const Home = () => {
       <CourseSection></CourseSection>
       <FeedBackSection></FeedBackSection>
       <BlogSection></BlogSection>
+      <Footer></Footer>
     </div>
   );
 };

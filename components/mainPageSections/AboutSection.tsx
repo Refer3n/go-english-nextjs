@@ -24,7 +24,7 @@ export default function AboutSection() {
   ];
 
   return (
-    <section className="main-section">
+    <section className="main-section h-[900px]">
       <div className="absolute inset-0">
         <div className="h-full w-1/2 bg-gray-300" />
       </div>

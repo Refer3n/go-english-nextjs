@@ -1,6 +1,8 @@
-import axios from "axios";
+"use client"
+
 import BlogCard from "./BlogCard"; // Import the BlogCard component
 import { useEffect, useState } from "react";
+import fetchData from "@/lib/actions/fetchData";
 
 interface Blog {
   id: number;
@@ -15,18 +17,16 @@ const BlogList: React.FC = () => {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/Blog/GetBlogPosts?number=0`;
-      const response = await axios.get(apiUrl);
-      const data: Blog[] = response.data;
+      const blogs: Blog[] = await fetchData<Blog>("Blog/GetBlogPosts", "en", { number: 0 });
 
-      setBlogs(data);
+      setBlogs(blogs);
     };
 
     fetchBlogs();
   }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6">
+    <div className="grid w-full gap-6 px-4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 justify-items-center">
       {blogs.map((blog) => (
         <BlogCard key={blog.id} blog={blog} />
       ))}
