@@ -5,11 +5,12 @@ import { useSearchParams } from "next/navigation";
 import LegalLinks from "@/components/LegalLinks";
 import { useRouter } from "next/navigation";
 import { logInWithRegistrationToken } from "@/lib/actions/auth";
+import { useLoading } from "@/context/LoadingContext";
 
 const VerifyPage = () => {
+  const { isLoading, setLoading } = useLoading();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -17,20 +18,20 @@ const VerifyPage = () => {
 
     if (!token) {
       setError("Invalid verification link");
-      setLoading(false);
       return;
     }
 
     const verify = async () => {
+      setLoading(true);
       const result = await logInWithRegistrationToken({
         registrationToken: token,
       });
+      setLoading(false);
 
       if (result.success) {
         router.push("/profile");
       } else {
         setError(result.error || "Verification failed");
-        setLoading(false);
       }
     };
 
@@ -40,7 +41,7 @@ const VerifyPage = () => {
   return (
     <div className="auth-form-container">
       <h1 className="auth-heading">
-        {loading
+        {isLoading
           ? "Verifying your account..."
           : error
             ? "Something went wrong"

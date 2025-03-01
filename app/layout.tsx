@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
-import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { LoadingProvider } from "@/context/LoadingContext";
+import AuthProvider from "@/components/AuthProvider"; // Import the AuthProvider
+import Loader from "@/components/Loader";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -17,12 +19,17 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
-  
+
   return (
     <html lang="en">
-      <SessionProvider session={session}>
-        <body className={`${nunitoSans.variable}`}>{children}</body>
-      </SessionProvider>
+      <body className={`${nunitoSans.variable}`}>
+        <AuthProvider session={session}>
+          <LoadingProvider>
+            <Loader />
+            {children}
+          </LoadingProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 };

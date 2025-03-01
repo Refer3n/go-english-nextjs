@@ -29,6 +29,7 @@ import { Checkbox } from "./ui/checkbox";
 import { useRouter } from "next/navigation";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 import LegalLinks from "./LegalLinks";
+import { useLoading } from "@/context/LoadingContext";
 
 interface Props<T extends FieldValues> {
   type: "LOG_IN" | "SIGN_UP";
@@ -43,6 +44,7 @@ const AuthForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) => {
+  const { isLoading, setLoading } = useLoading();
   const router = useRouter();
   const isLogIn = type === "LOG_IN";
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +56,9 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setLoading(true);
     const result = await onSubmit(data);
+    setLoading(false);
     if (!result.success) {
       setErrorMessage(result.error || "Error");
     } else {
@@ -182,8 +186,13 @@ const AuthForm = <T extends FieldValues>({
           <Button
             type="submit"
             className="auth-button hover:bg-yellow hover:text-primary"
+            disabled={isLoading}
           >
-            {isLogIn ? "Log In" : "Create an account"}
+            {isLoading
+              ? "Logging in..."
+              : isLogIn
+                ? "Log In"
+                : "Create an account"}
           </Button>
         </form>
       </Form>

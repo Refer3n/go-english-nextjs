@@ -26,6 +26,7 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import LegalLinks from "./LegalLinks";
+import { useLoading } from "@/context/LoadingContext";
 
 interface Props<T extends FieldValues> {
   type: "RESET_PASSWORD" | "CONFIRM_RESET_PASSWORD";
@@ -40,6 +41,7 @@ const ResetPasswordForm = <T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) => {
+  const { isLoading, setLoading } = useLoading();
   const router = useRouter();
   const isConfirmMode = type === "CONFIRM_RESET_PASSWORD";
   const [showPassword, setShowPassword] = useState(false);
@@ -51,7 +53,10 @@ const ResetPasswordForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setLoading(true);
     const result = await onSubmit(data);
+    setLoading(false);
+
     if (!result.success) {
       setErrorMessage(result.error || "Error");
     } else {
@@ -188,6 +193,7 @@ const ResetPasswordForm = <T extends FieldValues>({
           <Button
             type="submit"
             className="auth-button hover:bg-yellow hover:text-primary"
+            disabled={isLoading}
           >
             {isConfirmMode ? "Change Password" : "Reset Password"}
           </Button>
