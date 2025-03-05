@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import api from "../api";
 
 export const logInWithCredentials = async (
@@ -134,4 +134,8 @@ export const confirmResetPassword = async (
   }
 
   return { success: true };
+};
+
+export const signOutOfAccount = async () => {
+  await signOut({ redirectTo: "/" });
 };

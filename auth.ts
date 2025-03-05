@@ -11,12 +11,14 @@ declare module "next-auth" {
       name: string;
       lastname: string;
       accessToken: string;
+      avatarUrl: string | undefined;
     };
   }
 
   interface User {
     lastname: string;
     accessToken: string;
+    avatarUrl: string | undefined;
   }
 }
 
@@ -57,6 +59,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name: userData.firstName,
               lastname: userData.lastName,
               accessToken: token,
+              avatarUrl: userData.avatarUrl ?? undefined,
             };
           } catch (error) {
             console.error("Google auth error:", error);
@@ -92,6 +95,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name: userData.firstName,
               lastname: userData.lastName,
               accessToken: credentials.registrationToken,
+              avatarUrl: userData.avatarUrl ?? undefined,
             };
           } catch (error) {
             console.error("Registration token error:", error);
@@ -123,6 +127,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: userData.firstName,
             lastname: userData.lastName,
             accessToken: token,
+            avatarUrl: userData.avatarUrl ?? undefined,
           };
         } catch (error: any) {
           console.error("Auth error:", error.response?.data || error.message);
@@ -139,6 +144,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = user.name;
         token.lastname = user.lastname;
         token.accessToken = user.accessToken;
+        token.avatarUrl = user.avatarUrl;
       }
       return token;
     },
@@ -149,6 +155,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.name = token.name as string;
         session.user.lastname = token.lastname as string;
         session.user.accessToken = token.accessToken as string;
+        session.user.avatarUrl = token.avatarUrl as string | undefined;
       }
       return session;
     },
