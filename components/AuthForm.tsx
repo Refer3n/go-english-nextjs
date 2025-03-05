@@ -64,7 +64,7 @@ const AuthForm = <T extends FieldValues>({
     } else {
       setErrorMessage(null);
       if (isLogIn) {
-        router.push("/profile");
+        router.push("/dashboard");
       } else {
         router.push("/check-email");
       }
