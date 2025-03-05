@@ -6,7 +6,7 @@ import Logo from "@/components/Logo"; // Import the new component
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
 
-  if (session) redirect("/profile");
+  if (session) redirect("/dashboard");
 
   return (
     <main className="auth-container">
