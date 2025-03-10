@@ -2,10 +2,10 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import DashboardHeader from "@/components/dashboard-header";
+import { SidebarProvider } from "@/components/sidebar-provider";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
-  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
@@ -25,7 +25,7 @@ export default function DashboardLayout({
             <DashboardHeader />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+        <div>{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

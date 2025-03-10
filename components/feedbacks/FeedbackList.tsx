@@ -29,8 +29,6 @@ const FeedbackList: React.FC = () => {
           "en"
         );
 
-        console.log(feedbacks);
-
         const sortedFeedbacks = feedbacks
           .sort((a, b) =>
             b.date && a.date
