@@ -37,7 +37,8 @@ export default {
   				'300': '#8C8C8C',
   				'400': '#F3F3F3',
   				'500': '#FFFFFFBF',
-  				'600': '#F8F9FE'
+  				'600': '#F8F9FE',
+				'700': '#FEFCF3'
   			},
   			gray: {
   				'100': '#333333',
@@ -46,6 +47,7 @@ export default {
   				'400': '#D9D9D9'
   			},
   			black: {
+				DEFAULT: '#000',
   				'100': '#212121'
   			},
   			sidebar: {

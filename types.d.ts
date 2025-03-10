@@ -11,3 +11,5 @@ interface PasswordReset {
   password: string;
   token: string | null;
 }
+
+type SortOrder = "asc" | "desc"

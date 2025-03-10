@@ -97,6 +97,10 @@
     @apply bg-yellow text-primary rounded-full font-medium text-base px-6 py-4
   }
 
+  .button-option {
+    @apply bg-gray-300 text-primary rounded-full font-bold text-base px-6 py-4 border border-primary data-[state=active]:bg-primary data-[state=active]:text-light-100
+  }
+
   .nav-item {
     @apply text-xl text-black-100 font-semibold
   }
@@ -115,6 +119,10 @@
 
   .link-text {
     @apply text-blue-200 hover:underline
+  }
+
+  .user-courses-card {
+    @apply h-[624px] bg-white p-6 2xl:h-[548px] border-none
   }
 }
 
@@ -172,4 +180,20 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+[data-state="open"] > .fixed.inset-0.bg-background\/80 {
+  @apply bg-black/20 backdrop-blur-sm;
+}
+
+.border-collapse {
+  border-collapse: collapse;
+}
+
+.border-collapse tbody tr {
+  border-bottom: none !important;
+}
+
+.border-collapse td {
+  border-bottom: none !important;
 }
