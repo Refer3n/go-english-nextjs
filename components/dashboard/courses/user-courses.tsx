@@ -151,7 +151,7 @@ export default function UserCourses() {
           <div key={course.id} className="flex items-start gap-4">
             <div className="relative overflow-hidden flex-shrink-0 items-center">
               <Image
-                src={course.thumbnail || "images/default.jpg"}
+                src={course.thumbnail || "/images/default.jpg"}
                 alt={course.title}
                 width={120}
                 height={120}
