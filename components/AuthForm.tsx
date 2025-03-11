@@ -65,6 +65,9 @@ const AuthForm = <T extends FieldValues>({
       setErrorMessage(null);
       if (isLogIn) {
         router.push("/dashboard");
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         router.push("/check-email");
       }

@@ -29,7 +29,10 @@ const VerifyPage = () => {
       setLoading(false);
 
       if (result.success) {
-        router.push("/profile");
+        router.push("/dashboard");
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
         setError(result.error || "Verification failed");
       }
