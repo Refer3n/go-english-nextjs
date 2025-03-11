@@ -13,3 +13,11 @@ interface PasswordReset {
 }
 
 type SortOrder = "asc" | "desc"
+interface UpdateUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  oldPassword: string;
+  newPassword: string;
+}
