@@ -4,10 +4,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import DashboardHeader from "@/components/dashboard-header";
 import { SidebarProvider } from "@/components/sidebar-provider";
 import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -25,7 +22,7 @@ export default function DashboardLayout({
             <DashboardHeader />
           </div>
         </header>
-        <div>{children}</div>
+        <div className="min-h-[100%]">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

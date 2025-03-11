@@ -11,3 +11,12 @@ interface PasswordReset {
   password: string;
   token: string | null;
 }
+
+interface UpdateUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  oldPassword: string;
+  newPassword: string;
+}

@@ -37,12 +37,46 @@ export const confirmResetPasswordSchema = z.object({
   token: z.string(),
   password: z
     .string()
-    .min(6, { message: "Password must contain at least 6 characters." }),
+    .min(6, { message: "Password must contain at least 6 characters." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    }),
 });
 
 export const notificationSchema = z.object({
-  email: z.string().email( {message: "Please enter a valid email address."}),
+  email: z.string().email({ message: "Please enter a valid email address." }),
   terms: z.boolean().refine((val) => val === true, {
     message: "You must accept the terms",
   }),
-})
+});
+
+export const updateProfileSchema = z.object({
+  id: z.string(),
+  firstName: z.string().nonempty({ message: "First name is required." }),
+  lastName: z.string().nonempty({ message: "Last name is required." }),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+});
+
+export const updatePasswordSchema = z
+  .object({
+    id: z.string(),
+    oldPassword: z.string(),
+    newPassword: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long." })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter.",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter.",
+      }),
+    confirmPassword: z.string(),
+    email: z.string().email(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords don't match.",
+  });
