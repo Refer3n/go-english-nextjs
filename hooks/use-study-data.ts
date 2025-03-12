@@ -4,16 +4,18 @@ import { useState, useEffect } from "react";
 import { format, isSameDay } from "date-fns";
 import { useSession } from "next-auth/react";
 import api from "@/lib/api";
-import {
-  ApiDataItem,
-  calculateYAxisProps,
-  ChartDataItem,
-} from "@/lib/utils/chart-utils";
+import { calculateYAxisProps, ChartDataItem } from "@/lib/utils/chart-utils";
+
+export type ApiDataItem = {
+  tasksCompleted: number;
+  startDate: Date;
+  timeSpentInMinutes: number;
+};
 
 export function useChartData(
   period: string,
   selectedYear: string,
-  dateRange: { from: Date; to: Date }
+  dateRange: { from: Date; to: Date },
 ) {
   const { data: session } = useSession();
   const userId = session?.user?.id;
@@ -42,35 +44,50 @@ export function useChartData(
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           const transformedData: ApiDataItem[] = response.data.map((item) => {
-            const date = new Date(item.date);
+            const date = new Date(item.startDate);
             return {
-              tasks: item.tasks,
-              date: date,
-              timeSpentInMinutes: item.timeSpentInMinutes || 0,
+              tasksCompleted:
+                typeof item.tasksCompleted === "number" &&
+                !isNaN(item.tasksCompleted)
+                  ? item.tasksCompleted
+                  : 0,
+              startDate: date,
+              timeSpentInMinutes:
+                typeof item.timeSpentInMinutes === "number" &&
+                !isNaN(item.timeSpentInMinutes)
+                  ? item.timeSpentInMinutes
+                  : 0,
             };
           });
 
+          // Calculate totals from all data (unfiltered) with safety checks
           const allTasks =
             transformedData && transformedData.length > 0
               ? transformedData.reduce((sum, item) => {
-                  const taskValue =
-                    typeof item.tasks === "number" && !isNaN(item.tasks)
-                      ? item.tasks
-                      : 0;
+                  const taskValue = !isNaN(item.tasksCompleted)
+                    ? item.tasksCompleted
+                    : 0;
                   return sum + taskValue;
                 }, 0)
               : 0;
 
-          const allTimeSpent = transformedData.reduce(
-            (sum, item) => sum + item.timeSpentInMinutes,
-            0
-          );
+          const allTimeSpent =
+            transformedData && transformedData.length > 0
+              ? transformedData.reduce((sum, item) => {
+                  const timeValue = !isNaN(item.timeSpentInMinutes)
+                    ? item.timeSpentInMinutes
+                    : 0;
+                  return sum + timeValue;
+                }, 0)
+              : 0;
 
           setTotalTasks(allTasks);
           setTotalTimeSpent(allTimeSpent);
 
           const filteredData = transformedData.filter(
-            (item) => item.date >= dateRange.from && item.date <= dateRange.to
+            (item) =>
+              item.startDate >= dateRange.from &&
+              item.startDate <= dateRange.to,
           );
 
           let groupedData: ChartDataItem[] = [];
@@ -101,9 +118,12 @@ export function useChartData(
             });
 
             filteredData.forEach((item) => {
-              const monthKey = format(item.date, "MMM");
+              const monthKey = format(item.startDate, "MMM");
               if (monthGroups[monthKey]) {
-                monthGroups[monthKey].tasks += item.tasks;
+                const taskValue = !isNaN(item.tasksCompleted)
+                  ? item.tasksCompleted
+                  : 0;
+                monthGroups[monthKey].tasks += taskValue;
               }
             });
 
@@ -114,13 +134,13 @@ export function useChartData(
             const lastDay = new Date(
               selectedMonthYear,
               selectedMonth + 1,
-              0
+              0,
             ).getDate();
 
             const dayMap: Record<number, ChartDataItem> = {};
 
             filteredData.forEach((item) => {
-              const day = item.date.getDate();
+              const day = item.startDate.getDate();
               if (!dayMap[day]) {
                 dayMap[day] = {
                   month: day.toString(),
@@ -128,7 +148,11 @@ export function useChartData(
                   date: new Date(selectedMonthYear, selectedMonth, day),
                 };
               }
-              dayMap[day].tasks += item.tasks;
+
+              const taskValue = !isNaN(item.tasksCompleted)
+                ? item.tasksCompleted
+                : 0;
+              dayMap[day].tasks += taskValue;
             });
 
             if (!dayMap[1]) {
@@ -148,18 +172,23 @@ export function useChartData(
             }
 
             groupedData = Object.values(dayMap).sort(
-              (a, b) => a.date.getDate() - b.date.getDate()
+              (a, b) => a.date.getDate() - b.date.getDate(),
             );
           } else if (period === "week") {
             const weekStart = new Date(dateRange.from);
 
             groupedData = Array.from({ length: 7 }, (_, i) => {
               const currentDay = addDays(weekStart, i);
-              const dayNumber = i + 1;
+              const dayNumber = i + 1; // 1-7 for the days of the week
 
               const tasksForDay = filteredData
-                .filter((item) => isSameDay(item.date, currentDay))
-                .reduce((sum, item) => sum + item.tasks, 0);
+                .filter((item) => isSameDay(item.startDate, currentDay))
+                .reduce((sum, item) => {
+                  const taskValue = !isNaN(item.tasksCompleted)
+                    ? item.tasksCompleted
+                    : 0;
+                  return sum + taskValue;
+                }, 0);
 
               return {
                 month: dayNumber.toString(),

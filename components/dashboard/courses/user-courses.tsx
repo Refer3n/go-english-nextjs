@@ -1,22 +1,23 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
-import Image from "next/image"
-import { Card } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { BookOpen } from "lucide-react"
-import api from "@/lib/api"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { BookOpen } from "lucide-react";
+import api from "@/lib/api";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface Course {
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  progress: number
-  lastActive?: string
-  level: string
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  progress: number;
+  lastActive?: string;
+  level: string;
 }
 
 const testCourses: Course[] = [
@@ -56,21 +57,21 @@ const testCourses: Course[] = [
     lastActive: "1 day ago",
     level: "C1",
   },
-]
+];
 
 export default function UserCourses() {
-  const { data: session } = useSession()
-  const userId = session?.user?.id
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
-  const [courses, setCourses] = useState<Course[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId || !session?.user?.accessToken) return
+    if (!userId || !session?.user?.accessToken) return;
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     api
       .get("/Course/GetUserCourses", {
@@ -80,25 +81,25 @@ export default function UserCourses() {
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           if (response.data.length > 0) {
-            setCourses(response.data)
+            setCourses(response.data);
           } else {
-            setCourses(testCourses)
+            setCourses(testCourses);
           }
         } else {
-          console.error("Invalid data format:", response.data)
-          setError("Invalid data format received from the server")
-          setCourses(testCourses)
+          console.error("Invalid data format:", response.data);
+          setError("Invalid data format received from the server");
+          setCourses(testCourses);
         }
-        setIsLoading(false)
-        console.log(courses)
+        setIsLoading(false);
+        console.log(courses);
       })
       .catch((error) => {
-        console.error("Error fetching user courses:", error)
-        setError("Failed to fetch user courses")
-        setCourses(testCourses)
-        setIsLoading(false)
-      })
-  }, [userId, session?.user?.accessToken])
+        console.error("Error fetching user courses:", error);
+        setError("Failed to fetch user courses");
+        setCourses(testCourses);
+        setIsLoading(false);
+      });
+  }, [userId, session?.user?.accessToken]);
 
   if (isLoading) {
     return (
@@ -116,15 +117,17 @@ export default function UserCourses() {
           ))}
         </div>
       </Card>
-    )
+    );
   }
 
   if (error) {
     return (
       <Card className="user-courses-card">
-        <div className="flex items-center justify-center h-full text-red-500">{error}</div>
+        <div className="flex items-center justify-center h-full text-red-500">
+          {error}
+        </div>
       </Card>
-    )
+    );
   }
 
   if (courses.length === 0) {
@@ -132,7 +135,9 @@ export default function UserCourses() {
       <Card className="user-courses-card">
         <div className="flex flex-col items-center justify-center h-full text-center p-6">
           <BookOpen className="h-12 w-12 text-light-300 mb-4" />
-          <h3 className="text-lg font-semibold text-primary mb-2">No courses found</h3>
+          <h3 className="text-lg font-semibold text-primary mb-2">
+            No courses found
+          </h3>
           <p className="text-light-300">
             You haven't enrolled in any courses yet.{" "}
             <Link href="/courses" className="link-text">
@@ -141,7 +146,7 @@ export default function UserCourses() {
           </p>
         </div>
       </Card>
-    )
+    );
   }
 
   return (
@@ -163,25 +168,27 @@ export default function UserCourses() {
               <p className="text-sm text-light-300">{course.description}</p>
               <div className="mt-2 space-y-1">
                 <div className="flex items-center gap-3">
-                  <div className="bg-light-100 px-2 py-0.5 text-sm text-light-300 font-medium">{course.level}</div>
+                  <div className="bg-light-100 px-2 py-0.5 text-sm text-light-300 font-medium">
+                    {course.level}
+                  </div>
                   <div className="flex-1 flex items-center gap-3">
-                    <Progress value={course.progress} className="flex-1 h-2 bg-light-100" />
+                    <Progress
+                      value={course.progress}
+                      className="flex-1 h-2 bg-light-100"
+                    />
                     <div className="flex items-center gap-1 whitespace-nowrap">
                       <span className="text-light-300">{course.progress}%</span>
                       <span className="text-light-300">Complete</span>
                     </div>
                   </div>
                 </div>
-                {course.lastActive && <div className="text-light-300 text-xs">Last active: {course.lastActive}</div>}
+                {course.lastActive && (
+                  <div className="text-light-300 text-xs">
+                    Last active: {course.lastActive}
+                  </div>
+                )}
               </div>
-              <button
-                className={`mt-3 px-4 py-2 rounded-full text-sm font-medium transition-colors
-                  ${
-                    index === 0
-                      ? "text-primary font-bold bg-yellow-400"
-                      : "text-primary font-bold border border-primary"
-                  }`}
-              >
+              <button className="button-bordered !text-sm">
                 Continue Learning
               </button>
             </div>
@@ -189,6 +196,5 @@ export default function UserCourses() {
         ))}
       </div>
     </Card>
-  )
+  );
 }
-

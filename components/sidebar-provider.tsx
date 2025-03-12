@@ -4,7 +4,7 @@ import type * as React from "react";
 import { SidebarProvider as OriginalSidebarProvider } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
 
-const SIDEBAR_WIDTH_DEFAULT = "11.5rem";
+const SIDEBAR_WIDTH_DEFAULT = "11rem";
 const SIDEBAR_WIDTH_LARGE = "14rem";
 const SIDEBAR_WIDTH_ICON = "5rem";
 const SIDEBAR_WIDTH_MOBILE = "22rem";

@@ -34,7 +34,7 @@
 @layer components {
 }
 
-@layer utilities  {
+@layer utilities {
   .auth-container {
     @apply relative flex h-screen w-screen bg-primary items-center justify-center;
   }
@@ -94,35 +94,39 @@
   }
 
   .button {
-    @apply bg-yellow text-primary rounded-full font-medium text-base px-6 py-4
+    @apply bg-yellow text-primary rounded-full font-medium text-base px-6 py-4;
   }
 
   .button-option {
-    @apply bg-gray-300 text-primary rounded-full font-bold text-base px-6 py-4 border border-primary data-[state=active]:bg-primary data-[state=active]:text-light-100
+    @apply bg-gray-300 text-primary rounded-full font-bold text-base px-6 py-4 border border-primary data-[state=active]:bg-primary data-[state=active]:text-light-100;
+  }
+
+  .button-bordered{
+    @apply px-4 py-2 rounded-full text-primary text-base font-medium bg-white border border-primary hover:bg-yellow hover:border-yellow;
   }
 
   .nav-item {
-    @apply text-xl text-black-100 font-semibold
+    @apply text-xl text-black-100 font-semibold;
   }
 
   .main-section {
-    @apply relative mb-14
+    @apply relative mb-14;
   }
 
   .main-section-colored {
-    @apply main-section relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-[60%] before:bg-gray-300 before:-z-10
+    @apply main-section relative before:content-[''] before:absolute before:left-0 before:right-0 before:bottom-0 before:h-[60%] before:bg-gray-300 before:-z-10;
   }
 
   .heading {
-    @apply text-4xl text-primary font-bold
+    @apply text-4xl text-primary font-bold;
   }
 
   .link-text {
-    @apply text-blue-200 hover:underline
+    @apply text-blue-200 hover:underline;
   }
 
   .user-courses-card {
-    @apply h-[624px] bg-white p-6 2xl:h-[548px] border-none
+    @apply h-[624px] bg-white p-6 2xl:h-[548px] border-none;
   }
 }
 

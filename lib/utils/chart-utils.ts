@@ -5,8 +5,8 @@ export type ChartDataItem = {
 };
 
 export type ApiDataItem = {
-  tasks: number;
-  date: Date;
+  tasksCompleted: number;
+  startDate: Date;
   timeSpentInMinutes: number;
 };
 

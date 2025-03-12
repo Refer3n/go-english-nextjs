@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { startOfYear, endOfYear } from "date-fns";
 import {
-  generateWeeksForMonth,
   generateMonthsForYear,
+  generateWeeksForMonth,
 } from "@/lib/utils/date-utils";
 
 export type PeriodOption = {
@@ -13,7 +13,11 @@ export type PeriodOption = {
   to: Date;
 };
 
-export function usePeriodOptions(period: string, selectedYear: string) {
+export function usePeriodOptions(
+  period: string,
+  selectedYear: string,
+  selectedMonth: string | null = null,
+) {
   const [periodOptions, setPeriodOptions] = useState<PeriodOption[]>([]);
   const [selectedPeriodOption, setSelectedPeriodOption] = useState("");
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -21,17 +25,47 @@ export function usePeriodOptions(period: string, selectedYear: string) {
     to: endOfYear(new Date(2025, 0, 1)),
   });
 
+  // Generate period options based on the selected period and year/month
   useEffect(() => {
     const year = Number.parseInt(selectedYear);
     let options: PeriodOption[] = [];
 
     if (period === "week") {
-      options = generateWeeksForMonth(year, 0);
-      setSelectedPeriodOption(options[0]?.label || "");
+      // If a month is selected, generate weeks for that month
+      // Otherwise, default to January
+      const monthIndex = selectedMonth ? new Date(selectedMonth).getMonth() : 0;
+
+      options = generateWeeksForMonth(year, monthIndex);
+
+      // If there are options and no selection yet, select the first one
+      if (options.length > 0 && !selectedPeriodOption) {
+        setSelectedPeriodOption(options[0]?.label || "");
+      } else if (options.length > 0) {
+        // Try to keep the same week if possible
+        const existingWeekIndex = options.findIndex(
+          (opt) => opt.label === selectedPeriodOption,
+        );
+        if (existingWeekIndex === -1) {
+          setSelectedPeriodOption(options[0]?.label || "");
+        }
+      }
     } else if (period === "month") {
       options = generateMonthsForYear(year);
-      setSelectedPeriodOption(options[0]?.label || "");
+
+      // If there are options and no selection yet, select the first one
+      if (options.length > 0 && !selectedPeriodOption) {
+        setSelectedPeriodOption(options[0]?.label || "");
+      } else if (options.length > 0 && selectedMonth) {
+        // Try to find and select the previously selected month
+        const monthOption = options.find((opt) => opt.label === selectedMonth);
+        if (monthOption) {
+          setSelectedPeriodOption(monthOption.label);
+        } else {
+          setSelectedPeriodOption(options[0]?.label || "");
+        }
+      }
     } else {
+      // Year period
       options = [
         {
           label: selectedYear,
@@ -44,25 +78,38 @@ export function usePeriodOptions(period: string, selectedYear: string) {
 
     setPeriodOptions(options);
 
+    // Set date range based on the selected option
     if (options.length > 0) {
-      setDateRange({
-        from: options[0].from,
-        to: options[0].to,
-      });
-    }
-  }, [period, selectedYear]);
+      const selectedOption =
+        period === "month" && selectedMonth
+          ? options.find((opt) => opt.label === selectedMonth)
+          : options.find((opt) => opt.label === selectedPeriodOption) ||
+            options[0];
 
-  const handlePeriodOptionChange = (value: string) => {
-    setSelectedPeriodOption(value);
-
-    const option = periodOptions.find((opt) => opt.label === value);
-    if (option) {
-      setDateRange({
-        from: option.from,
-        to: option.to,
-      });
+      if (selectedOption) {
+        setDateRange({
+          from: selectedOption.from,
+          to: selectedOption.to,
+        });
+      }
     }
-  };
+  }, [period, selectedYear, selectedMonth, selectedPeriodOption]);
+
+  // Handle period option change
+  const handlePeriodOptionChange = useCallback(
+    (value: string) => {
+      setSelectedPeriodOption(value);
+
+      const option = periodOptions.find((opt) => opt.label === value);
+      if (option) {
+        setDateRange({
+          from: option.from,
+          to: option.to,
+        });
+      }
+    },
+    [periodOptions],
+  );
 
   return {
     periodOptions,
