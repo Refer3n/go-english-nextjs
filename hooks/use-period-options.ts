@@ -16,7 +16,7 @@ export type PeriodOption = {
 export function usePeriodOptions(
   period: string,
   selectedYear: string,
-  selectedMonth: string | null = null,
+  selectedMonth: string | null = null
 ) {
   const [periodOptions, setPeriodOptions] = useState<PeriodOption[]>([]);
   const [selectedPeriodOption, setSelectedPeriodOption] = useState("");
@@ -25,47 +25,41 @@ export function usePeriodOptions(
     to: endOfYear(new Date(2025, 0, 1)),
   });
 
-  // Generate period options based on the selected period and year/month
   useEffect(() => {
     const year = Number.parseInt(selectedYear);
     let options: PeriodOption[] = [];
 
     if (period === "week") {
-      // If a month is selected, generate weeks for that month
-      // Otherwise, default to January
-      const monthIndex = selectedMonth ? new Date(selectedMonth).getMonth() : 0;
+      let monthIndex = 0;
+
+      if (selectedMonth) {
+        try {
+          const monthName = selectedMonth.split(" ")[0];
+          const monthMap: Record<string, number> = {
+            January: 0,
+            February: 1,
+            March: 2,
+            April: 3,
+            May: 4,
+            June: 5,
+            July: 6,
+            August: 7,
+            September: 8,
+            October: 9,
+            November: 10,
+            December: 11,
+          };
+          monthIndex = monthMap[monthName] || 0;
+        } catch (e) {
+          console.error("Error parsing month:", e);
+          monthIndex = 0;
+        }
+      }
 
       options = generateWeeksForMonth(year, monthIndex);
-
-      // If there are options and no selection yet, select the first one
-      if (options.length > 0 && !selectedPeriodOption) {
-        setSelectedPeriodOption(options[0]?.label || "");
-      } else if (options.length > 0) {
-        // Try to keep the same week if possible
-        const existingWeekIndex = options.findIndex(
-          (opt) => opt.label === selectedPeriodOption,
-        );
-        if (existingWeekIndex === -1) {
-          setSelectedPeriodOption(options[0]?.label || "");
-        }
-      }
     } else if (period === "month") {
       options = generateMonthsForYear(year);
-
-      // If there are options and no selection yet, select the first one
-      if (options.length > 0 && !selectedPeriodOption) {
-        setSelectedPeriodOption(options[0]?.label || "");
-      } else if (options.length > 0 && selectedMonth) {
-        // Try to find and select the previously selected month
-        const monthOption = options.find((opt) => opt.label === selectedMonth);
-        if (monthOption) {
-          setSelectedPeriodOption(monthOption.label);
-        } else {
-          setSelectedPeriodOption(options[0]?.label || "");
-        }
-      }
     } else {
-      // Year period
       options = [
         {
           label: selectedYear,
@@ -73,29 +67,33 @@ export function usePeriodOptions(
           to: endOfYear(new Date(year, 0, 1)),
         },
       ];
-      setSelectedPeriodOption(options[0]?.label || "");
     }
 
     setPeriodOptions(options);
 
-    // Set date range based on the selected option
     if (options.length > 0) {
-      const selectedOption =
-        period === "month" && selectedMonth
-          ? options.find((opt) => opt.label === selectedMonth)
-          : options.find((opt) => opt.label === selectedPeriodOption) ||
-            options[0];
-
-      if (selectedOption) {
+      if (period === "month" && !selectedPeriodOption) {
+        setSelectedPeriodOption(options[0].label);
         setDateRange({
-          from: selectedOption.from,
-          to: selectedOption.to,
+          from: options[0].from,
+          to: options[0].to,
+        });
+      } else if (period === "week" && !selectedPeriodOption) {
+        setSelectedPeriodOption(options[0].label);
+        setDateRange({
+          from: options[0].from,
+          to: options[0].to,
+        });
+      } else if (period === "year") {
+        setSelectedPeriodOption(options[0].label);
+        setDateRange({
+          from: options[0].from,
+          to: options[0].to,
         });
       }
     }
   }, [period, selectedYear, selectedMonth, selectedPeriodOption]);
 
-  // Handle period option change
   const handlePeriodOptionChange = useCallback(
     (value: string) => {
       setSelectedPeriodOption(value);
@@ -108,7 +106,7 @@ export function usePeriodOptions(
         });
       }
     },
-    [periodOptions],
+    [periodOptions]
   );
 
   return {
