@@ -97,9 +97,7 @@ export default function OfferSection() {
   return (
     <section className="main-section-colored pb-14">
       <div className="flex flex-col gap-8 justify-center mx-[10vw]">
-        <h2 className="heading text-start">
-          What We are Offer
-        </h2>
+        <h2 className="heading text-start">What We are Offer</h2>
         <div className="relative">
           <Carousel
             opts={{
@@ -119,25 +117,30 @@ export default function OfferSection() {
               {carouselItems.map((item, index) => (
                 <CarouselItem
                   key={index}
-                  className="pl-12 basis-full md:basis-1/3 h-[55vh]"
+                  className="pl-12 basis-full md:basis-1/3 h-[65vh] 2xl:h-[55vh]"
                 >
                   <Card
                     className={cn(
-                      "shadow-lg shadow-gray-500/50 p-0 overflow-hidden rounded-xl border-none flex flex-col h-[55vh]",
-                      currentIndex === index ? "bg-primary" : "bg-light-600"
+                      "shadow-lg shadow-gray-500/50 p-0 overflow-hidden rounded-xl border-none flex flex-col h-[65vh] 2xl:h-[55vh]",
+                      currentIndex === index ? "bg-primary" : "bg-light-600",
                     )}
                   >
                     <CardContent className="p-0 flex flex-col flex-grow">
-                      <div className={cn("space-y-4 p-6", currentIndex === index
-                                ? "text-light-100"
-                                : "text-black-100")}>
+                      <div
+                        className={cn(
+                          "space-y-4 p-6",
+                          currentIndex === index
+                            ? "text-light-100"
+                            : "text-black-100",
+                        )}
+                      >
                         <div className="flex items-center gap-2">
                           <div
                             className={cn(
                               "w-8 h-8 rounded-lg flex items-center justify-center",
                               currentIndex === index
                                 ? "bg-yellow"
-                                : "bg-primary"
+                                : "bg-primary",
                             )}
                           >
                             <Image
@@ -151,22 +154,12 @@ export default function OfferSection() {
                               alt={`icon ${index + 1}`}
                             />
                           </div>
-                          <h3
-                            className="text-2xl font-semibold"
-                          >
+                          <h3 className="text-2xl font-semibold">
                             {item.title1}
                           </h3>
                         </div>
-                        <h4
-                          className="text-base font-medium"
-                        >
-                          {item.title2}
-                        </h4>
-                        <p
-                          className="text-sm"
-                        >
-                          {item.description}
-                        </p>
+                        <h4 className="text-base font-medium">{item.title2}</h4>
+                        <p className="text-sm">{item.description}</p>
                         <Link
                           href={item.link}
                           className="link-text flex items-center !text-blue-300"

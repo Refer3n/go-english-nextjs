@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import BlogCard from "./BlogCard"; // Import the BlogCard component
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ interface Blog {
   title: string;
   description: string;
   content: string;
-  image?: string
+  image?: string;
 }
 
 const BlogList: React.FC = () => {
@@ -17,7 +17,9 @@ const BlogList: React.FC = () => {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const blogs: Blog[] = await fetchData<Blog>("Blog/GetBlogPosts", "en", { number: 0 });
+      const blogs: Blog[] = await fetchData<Blog>("Blog/GetBlogPosts", "en", {
+        number: 0,
+      });
 
       setBlogs(blogs);
     };
@@ -26,7 +28,7 @@ const BlogList: React.FC = () => {
   }, []);
 
   return (
-    <div className="grid w-full gap-6 px-4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 justify-items-center">
+    <div className="grid w-full gap-6 px-4 mx-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 justify-items-center">
       {blogs.map((blog) => (
         <BlogCard key={blog.id} blog={blog} />
       ))}
