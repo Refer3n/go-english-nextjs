@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import CourseCard from "./CourseCard"; 
-import Pagination from "../Pagination"; // Import the Pagination component
+import Pagination from "../Pagination"; 
 import fetchData from "@/lib/actions/fetchData";
-import { useLoading } from "@/context/LoadingContext";
 
 interface Course {
   id: number;
@@ -25,14 +24,12 @@ interface CourseListProps {
 }
 
 const CourseList: React.FC<CourseListProps> = ({ itemsPerPage, sortBy }) => {
-  const { setLoading } = useLoading();
   const [courses, setCourses] = useState<Course[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCourses, setTotalCourses] = useState(0);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      setLoading(true);
       try {
         const courses: Course[] = await fetchData<Course>("Course/GetCoursesInfo", "en");
 
@@ -43,9 +40,6 @@ const CourseList: React.FC<CourseListProps> = ({ itemsPerPage, sortBy }) => {
         setTotalCourses(courses.length);
       } catch (error) {
         console.error("Error fetching courses:", error);
-      }
-      finally {
-        setLoading(false);
       }
     };
 

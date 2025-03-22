@@ -8,7 +8,6 @@ import { Progress } from "@/components/ui/progress";
 import { BookOpen } from "lucide-react";
 import api from "@/lib/api";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 interface Course {
   id: string;
@@ -19,45 +18,6 @@ interface Course {
   lastActive?: string;
   level: string;
 }
-
-const testCourses: Course[] = [
-  {
-    id: "1",
-    title: "Spelling: Double Letters",
-    description: "English for Intermediate",
-    thumbnail: "/images/default.jpg",
-    progress: 69,
-    lastActive: "17 days ago",
-    level: "B1",
-  },
-  {
-    id: "2",
-    title: "Business English",
-    description: "English for Upper Intermediate",
-    thumbnail: "/images/default.jpg",
-    progress: 90,
-    lastActive: "3 days ago",
-    level: "B2",
-  },
-  {
-    id: "3",
-    title: "Grammar Essentials",
-    description: "English for Beginners",
-    thumbnail: "/images/default.jpg",
-    progress: 45,
-    lastActive: "5 days ago",
-    level: "A2",
-  },
-  {
-    id: "4",
-    title: "Professional Communication",
-    description: "English for Advanced",
-    thumbnail: "/images/default.jpg",
-    progress: 12,
-    lastActive: "1 day ago",
-    level: "C1",
-  },
-];
 
 export default function UserCourses() {
   const { data: session } = useSession();
@@ -80,15 +40,10 @@ export default function UserCourses() {
       })
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
-          if (response.data.length > 0) {
-            setCourses(response.data);
-          } else {
-            setCourses(testCourses);
-          }
+          setCourses(response.data)
         } else {
           console.error("Invalid data format:", response.data);
           setError("Invalid data format received from the server");
-          setCourses(testCourses);
         }
         setIsLoading(false);
         console.log(courses);
@@ -96,7 +51,6 @@ export default function UserCourses() {
       .catch((error) => {
         console.error("Error fetching user courses:", error);
         setError("Failed to fetch user courses");
-        setCourses(testCourses);
         setIsLoading(false);
       });
   }, [userId, session?.user?.accessToken]);

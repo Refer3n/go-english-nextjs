@@ -22,7 +22,7 @@ export default function DashboardLayout({
             <DashboardHeader />
           </div>
         </header>
-        <div className="min-h-[100%]">{children}</div>
+        <div className=" h-auto">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

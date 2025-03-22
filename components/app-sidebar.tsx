@@ -37,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
         <SidebarMenuItem className="flex justify-center">
             <SidebarMenuButton size="xl" asChild className="w-full flex justify-center items-center">
-              <Link href="/" className="flex justify-center items-center w-full pr-14">
+              <Link href="/" className="flex justify-center items-center w-full lg:pr-[55%] 2xl:pr-14">
                 <Logo size="sm" />
               </Link>
             </SidebarMenuButton>

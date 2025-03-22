@@ -29,15 +29,7 @@ const FeedbackList: React.FC = () => {
           "en"
         );
 
-        const sortedFeedbacks = feedbacks
-          .sort((a, b) =>
-            b.date && a.date
-              ? new Date(b.date).getTime() - new Date(a.date).getTime()
-              : 0
-          )
-          .slice(0, 4);
-
-        setFeedbacks(sortedFeedbacks);
+        setFeedbacks(feedbacks);
       } catch (error) {
         console.error("Failed to fetch feedbacks:", error);
       }

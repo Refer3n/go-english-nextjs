@@ -26,7 +26,7 @@ export default {
   				'100': '#89A3FF',
   				'200': '#1443E8',
   				'300': '#66A0FF',
-				'400': '#4446A5'
+  				'400': '#4446A5'
   			},
   			yellow: {
   				DEFAULT: '#F4CE12'
@@ -38,17 +38,18 @@ export default {
   				'400': '#F3F3F3',
   				'500': '#FFFFFFBF',
   				'600': '#F8F9FE',
-				'700': '#FEFCF3'
+  				'700': '#FEFCF3',
   			},
   			gray: {
   				'100': '#333333',
   				'200': '#C2C3D5',
   				'300': '#EEEFF4',
-  				'400': '#D9D9D9'
+  				'400': '#D9D9D9',
+				'500': '#BFBFBF',
   			},
   			black: {
-				DEFAULT: '#000',
-  				'100': '#212121'
+  				'100': '#212121',
+  				DEFAULT: '#000'
   			},
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
@@ -70,9 +71,31 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		backgroundImage: {
-  			pattern: "url('/images/pattern.webp')",
+  			pattern: `url('/images/pattern.webp')`,
   			gradientLine: 'linear-gradient(to right, rgba(66, 133, 244, 0) 0%, rgba(66, 133, 244, 0.4) 50%, rgba(66, 133, 244, 0) 100%)',
   			gradientStar: 'background: linear-gradient(to right, #F4CE12 50%, #C2C3D5 50%);'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
   	}
   },

@@ -2,7 +2,7 @@
 
 import StudyAnalytics from "@/components/dashboard/statistics/study-analytics"
 import LearningStats from "@/components/dashboard/statistics/learning-stats"
-import UserCourses from "@/components/dashboard/courses/user-courses"
+import UserCourses from "@/components/courses/user-courses"
 import WeeklyGoals from "@/components/dashboard/goals/weekly-goals"
 import UserTests from "@/components/dashboard/tests/user-tests"
 

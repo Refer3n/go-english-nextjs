@@ -3,6 +3,7 @@
 import BlogCard from "./BlogCard"; // Import the BlogCard component
 import { useEffect, useState } from "react";
 import fetchData from "@/lib/actions/fetchData";
+import { useLoading } from "@/context/LoadingContext";
 
 interface Blog {
   id: number;
@@ -13,15 +14,24 @@ interface Blog {
 }
 
 const BlogList: React.FC = () => {
+  const { setLoading } = useLoading();
   const [blogs, setBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const blogs: Blog[] = await fetchData<Blog>("Blog/GetBlogPosts", "en", {
-        number: 0,
-      });
-
-      setBlogs(blogs);
+      setLoading(true); 
+      try {
+        const blogs: Blog[] = await fetchData<Blog>("Blog/GetBlogPosts", "en", {
+          number: 0,
+        });
+  
+        setBlogs(blogs);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+      finally {
+        setLoading(false);
+      }
     };
 
     fetchBlogs();
