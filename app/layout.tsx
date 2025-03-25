@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
+import "./safari-normalize.css";
 import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { LoadingProvider } from "@/context/LoadingContext";
