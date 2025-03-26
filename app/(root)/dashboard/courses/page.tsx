@@ -61,7 +61,7 @@ export default function CoursesPage() {
 
         <div>
           <h2 className="text-2xl font-bold mb-6">Courses suggested for you</h2>
-          <CourseList itemsPerPage={3} sortBy="rating" />
+          <CourseList itemsPerPage={4} />
         </div>
       </div>
     </div>

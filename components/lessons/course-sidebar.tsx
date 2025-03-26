@@ -14,7 +14,6 @@ import {
   BookOpen,
   HelpCircle,
   Play,
-  ChevronDown,
 } from "lucide-react";
 import type { CourseContent, Lesson } from "@/types/course";
 import { useEffect, useState } from "react";

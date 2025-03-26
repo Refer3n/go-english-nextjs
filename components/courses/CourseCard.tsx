@@ -1,22 +1,10 @@
 import Link from "next/link";
 import type React from "react";
 import StarRating from "../StarsRating";
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  level: string;
-  price: number;
-  lessonsCount: number;
-  modulesCount: number;
-  rating: number;
-  feedbacksNumber: number;
-  estimatedTimeInMinutes: number;
-}
+import { CourseDetails } from "@/types/course";
 
 type CourseCardProps = {
-  course: Course;
+  course: CourseDetails;
 };
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {

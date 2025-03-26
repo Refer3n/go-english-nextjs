@@ -128,6 +128,12 @@
   .user-courses-card {
     @apply h-[624px] bg-white p-6 2xl:h-[548px] border-none;
   }
+
+  @media (min-width: 1680px) {
+    .grid-cols-custom-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
 }
 
 @layer base {

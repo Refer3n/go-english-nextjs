@@ -60,6 +60,8 @@ export interface CourseDetails {
   title: string
   description: string
   level: string
+  lessonsCount: number,
+  modulesCount: number,
   rating: number
   feedbacksNumber: number
   imageUrl: string

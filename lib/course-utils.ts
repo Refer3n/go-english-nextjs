@@ -22,7 +22,7 @@ export async function fetchUserCourses(userId: string, accessToken: string) {
     }
   } catch (error) {
     console.error("Error fetching user courses:", error);
-    throw error; 
+    throw error;
   }
 }
 
@@ -107,9 +107,29 @@ export const fetchCourseDetails = unstable_cache(
     tags: ["course-details"],
   }
 );
+export const fetchAllCourses = (
+  number: number,
+  orderBy: string,
+  direction: string = "desc" 
+): Promise<CourseDetails[]> =>
+  api
+    .get<CourseDetails[]>("/Course/GetCoursesinfo", {
+      params: { orderBy, direction, number },
+    })
+    .then((response) => {
+      if (!Array.isArray(response.data)) {
+        console.error("Invalid data format:", response.data);
+        throw new Error("Invalid data format received from the server");
+      }
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error fetching courses:", error.message || error);
+      throw error;
+    });
+
 
 export function findNextLesson(courseContent: CourseContent) {
-
   for (const module of courseContent.modules) {
     for (const lesson of module.lessons) {
       if (!lesson.isCompleted) {
@@ -117,24 +137,27 @@ export function findNextLesson(courseContent: CourseContent) {
           lesson,
           moduleId: module.id,
           url: `/dashboard/courses/${courseContent.id}/modules/${module.id}/lessons/${lesson.id}`,
-        }
+        };
       }
     }
   }
 
-  if (courseContent.modules.length > 0 && courseContent.modules[0].lessons.length > 0) {
-    const firstModule = courseContent.modules[0]
-    const firstLesson = firstModule.lessons[0]
+  if (
+    courseContent.modules.length > 0 &&
+    courseContent.modules[0].lessons.length > 0
+  ) {
+    const firstModule = courseContent.modules[0];
+    const firstLesson = firstModule.lessons[0];
     return {
       lesson: firstLesson,
       moduleId: firstModule.id,
       url: `/dashboard/courses/${courseContent.id}/modules/${firstModule.id}/lessons/${firstLesson.id}`,
-    }
+    };
   }
 
   return {
     lesson: null,
     moduleId: null,
     url: `/dashboard/courses/${courseContent.id}/about`,
-  }
+  };
 }
