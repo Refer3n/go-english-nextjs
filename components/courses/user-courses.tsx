@@ -40,7 +40,7 @@ export default function UserCourses() {
       })
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
-          setCourses(response.data)
+          setCourses(response.data);
         } else {
           console.error("Invalid data format:", response.data);
           setError("Invalid data format received from the server");
@@ -94,7 +94,7 @@ export default function UserCourses() {
           </h3>
           <p className="text-light-300">
             You haven't enrolled in any courses yet.{" "}
-            <Link href="/courses" className="link-text">
+            <Link href="/dashboard/shop" className="link-text">
               Start your learning journey today!
             </Link>
           </p>
@@ -142,9 +142,11 @@ export default function UserCourses() {
                   </div>
                 )}
               </div>
-              <button className="button-bordered !text-sm">
-                Continue Learning
-              </button>
+              <Link href={`/dashboard/courses/${course.id}/about`}>
+                <button className="button-bordered !text-sm">
+                  Continue Learning
+                </button>
+              </Link>
             </div>
           </div>
         ))}

@@ -13,7 +13,7 @@ export interface TestOption {
 export interface TestQuestion {
   id: number
   text: string
-  type: "SingleChoice" | "MultipleChoice"
+  type: "SingleChoice" | "MultiChoice"
   options: TestOption[]
 }
 

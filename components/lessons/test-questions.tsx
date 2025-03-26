@@ -17,6 +17,7 @@ interface TestQuestionsProps {
   lessonId: string | number
   prevLesson: Lesson | null
   nextLesson: Lesson | null
+  nextModuleId?: string | number | null
   onNavigate: (lesson: Lesson) => void
   onScoreChange?: (score: number) => void
   hideSubmitButton?: boolean
@@ -29,6 +30,7 @@ export function TestQuestions({
   lessonType,
   lessonId,
   nextLesson,
+  nextModuleId,
   onScoreChange,
   hideSubmitButton = false,
   courseContent,
@@ -81,7 +83,7 @@ export function TestQuestions({
           correctAnswers++
         }
       }
-      else if (question.type === "MultipleChoice") {
+      else if (question.type === "MultiChoice") {
         if (
           selectedOptions.length === correctOptions.length &&
           selectedOptions.every((option) => correctOptions.includes(option))
@@ -126,10 +128,6 @@ export function TestQuestions({
   const handleComplete = () => {
     setSubmitted(true)
   }
-
-  const isComplete = test.questions.every(
-    (question) => selectedAnswers[question.id] && selectedAnswers[question.id].length > 0,
-  )
 
   const isOptionCorrect = (questionId: number, optionId: number) => {
     const option = test.questions.find((q) => q.id === questionId)?.options.find((o) => o.id === optionId)
@@ -315,6 +313,7 @@ export function TestQuestions({
             testId={test.id}
             score={currentScore}
             nextLesson={nextLesson}
+            nextModuleId={nextModuleId}
             onComplete={handleComplete}
             className="bg-primary hover:bg-primary/90 text-white"
             courseContent={courseContent}

@@ -1,71 +1,69 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
-import { Clock, BookOpen, ChevronRight } from "lucide-react"
-import { BreadcrumbNav } from "@/components/breadcrumb-nav"
-import type { CourseContent, CourseDetails } from "@/types/course"
-import StarRating from "@/components/StarsRating"
-import Link from "next/link"
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Clock, BookOpen, ChevronRight } from "lucide-react";
+import { BreadcrumbNav } from "@/components/breadcrumb-nav";
+import type { CourseContent, CourseDetails } from "@/types/course";
+import StarRating from "@/components/StarsRating";
+import Link from "next/link";
 
 interface CourseAboutClientProps {
-  courseContent: CourseContent
-  courseDetails: CourseDetails
-  courseId: string
-  status: string
+  courseContent: CourseContent;
+  courseDetails: CourseDetails;
+  courseId: string;
+  status: string;
   breadcrumbItems: Array<{
-    label: string
-    href?: string
-    isCurrentPage?: boolean
-  }>
+    label: string;
+    href?: string;
+    isCurrentPage?: boolean;
+  }>;
+  nextLessonPath: string;
 }
 
 export function CourseAboutClient({
   courseContent,
   courseDetails,
-  courseId,
-  status,
   breadcrumbItems,
+  nextLessonPath,
 }: CourseAboutClientProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleContinueLearning = () => {
-    const firstIncompleteModule = courseContent?.modules.find((module) => !module.isCompleted)
-
-    if (firstIncompleteModule) {
-      const firstIncompleteLesson = firstIncompleteModule.lessons.find((lesson) => !lesson.isCompleted)
-
-      if (firstIncompleteLesson) {
-        router.push(`/dashboard/courses/${courseId}/modules/${firstIncompleteModule.id}/lessons/${firstIncompleteLesson.id}`)
-      } else {
-        router.push(
-          `/dashboard/courses/${courseId}/modules/${firstIncompleteModule.id}/lessons/${firstIncompleteModule.lessons[0].id}`,
-        )
-      }
-    } else if (courseContent?.modules.length) {
-      const firstModule = courseContent.modules[0]
-      router.push(`/dashboard/courses/${courseId}/modules/${firstModule.id}/lessons/${firstModule.lessons[0].id}`)
+    if (nextLessonPath) {
+      router.push(nextLessonPath);
     }
-  }
+  };
 
-  console.log(courseContent)
-  console.log(courseDetails)
-
-  const isCompleted = courseContent?.progress === 100
+  const buttonText =
+    courseContent?.progress === 100
+      ? "Restart Course"
+      : courseContent?.progress === 0
+        ? "Start learning"
+        : "Continue Learning";
 
   const totalHours = Math.round(courseDetails.estimatedTimeInMinutes / 60);
 
-  const totalLessons = courseContent.modules.reduce((sum, module) => sum + module.lessonsCount, 0)
-  const completedLessons = courseContent.modules.reduce((sum, module) => sum + module.completedLessonsCount, 0)
+  const totalLessons = courseContent.modules.reduce(
+    (sum, module) => sum + module.lessonsCount,
+    0
+  );
+  const completedLessons = courseContent.modules.reduce(
+    (sum, module) => sum + module.completedLessonsCount,
+    0
+  );
 
   return (
     <>
       <div className="flex justify-between items-center mb-8">
         <BreadcrumbNav items={breadcrumbItems} />
-        <Button className="button hover:bg-yellow/90" onClick={handleContinueLearning}>
-          {isCompleted ? "Restart Course" : "Continue Learning"}
+        <Button
+          className="button hover:bg-yellow/90"
+          onClick={handleContinueLearning}
+        >
+          {buttonText}
         </Button>
       </div>
 
@@ -91,14 +89,19 @@ export function CourseAboutClient({
 
             <div className="space-y-8">
               <div>
-                <h3 className="text-base text-light-300 font-semibold mb-1">Completion</h3>
+                <h3 className="text-base text-light-300 font-semibold mb-1">
+                  Completion
+                </h3>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">{courseContent.progress}%</span>
                   <span className="text-sm text-light-300">
                     {completedLessons}/{totalLessons}
                   </span>
                 </div>
-                <Progress value={courseContent.progress} className="flex-1 h-1 bg-light-100" />
+                <Progress
+                  value={courseContent.progress}
+                  className="flex-1 h-1 bg-light-100"
+                />
               </div>
 
               <div className="flex items-center gap-4">
@@ -109,18 +112,26 @@ export function CourseAboutClient({
               <div className="flex items-center gap-4">
                 <BookOpen className="h-6 w-6 text-light-300" />
                 <div className="flex items-center">
-                  <span className="text-blue-600 font-medium">{courseContent.modulesCount} modules</span>
+                  <span className="text-blue-600 font-medium">
+                    {courseContent.modulesCount} modules
+                  </span>
                 </div>
               </div>
 
               <div className="flex items-center gap-1">
                 <StarRating rating={courseDetails.rating} />
-                <span className="ml-2 text-gray-700">{courseDetails.rating} Rating</span>
+                <span className="ml-2 text-gray-700">
+                  {courseDetails.rating} Rating
+                </span>
               </div>
 
               <div>
-                <Link href="#" className="link-text flex items-center font-normal leading-6">
-                  Full course description <ChevronRight className="w-6 h-6 ml-2" strokeWidth={1.3} />
+                <Link
+                  href="#"
+                  className="link-text flex items-center font-normal leading-6"
+                >
+                  Full course description{" "}
+                  <ChevronRight className="w-6 h-6 ml-2" strokeWidth={1.3} />
                 </Link>
               </div>
             </div>
@@ -128,6 +139,5 @@ export function CourseAboutClient({
         </div>
       </div>
     </>
-  )
+  );
 }
-

@@ -1,44 +1,45 @@
-"use client";
+"use client"
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Lesson } from "@/types/course";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+
+interface Lesson {
+  id: string
+  title: string
+  videoUrl: string
+  isCompleted: boolean
+}
 
 interface LessonNavigationProps {
-  courseId: string;
-  moduleId: string;
-  prevLesson: Lesson | null;
-  nextLesson: Lesson | null;
+  courseId: string
+  prevLesson: Lesson | null
+  prevModuleId: string | number | null
+  nextLesson: Lesson | null
+  nextModuleId: string | number | null
 }
 
 export function LessonNavigation({
   courseId,
-  moduleId,
   prevLesson,
+  prevModuleId,
   nextLesson,
+  nextModuleId,
 }: LessonNavigationProps) {
   const router = useRouter();
 
-  useEffect(() => {
-    if (prevLesson) {
-      const prevUrl = `/dashboard/courses/${courseId}/modules/${moduleId}/lessons/${prevLesson.id}`
-      router.prefetch(prevUrl)
+  const navigateToPrevious = useCallback(() => {
+    if (prevLesson && prevModuleId) {
+      router.push(`/dashboard/courses/${courseId}/modules/${prevModuleId}/lessons/${prevLesson.id}`, { scroll: false })
     }
+  }, [courseId, prevLesson, prevModuleId, router])
 
-    if (nextLesson) {
-      const nextUrl = `/dashboard/courses/${courseId}/modules/${moduleId}/lessons/${nextLesson.id}`
-      router.prefetch(nextUrl)
+  const navigateToNext = useCallback(() => {
+    if (nextLesson && nextModuleId) {
+      router.push(`/dashboard/courses/${courseId}/modules/${nextModuleId}/lessons/${nextLesson.id}`, { scroll: false })
     }
-  }, [courseId, moduleId, nextLesson, prevLesson, router])
-
-  const navigateToLesson = useCallback(
-    (lesson: Lesson) => {
-      router.push(`/dashboard/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}`, { scroll: false })
-    },
-    [courseId, moduleId, router],
-  )
+  }, [courseId, nextLesson, nextModuleId, router])
 
   return (
     <div className="flex items-center gap-10 mr-6">
@@ -47,7 +48,7 @@ export function LessonNavigation({
           variant="link"
           size="md"
           className="flex items-center gap-1 text-blue-600"
-          onClick={() => navigateToLesson(prevLesson)}
+          onClick={navigateToPrevious}
         >
           <ChevronLeft className="h-4 w-4" />
           Previous
@@ -61,7 +62,7 @@ export function LessonNavigation({
           variant="link"
           size="md"
           className="flex items-center gap-1 text-blue-600"
-          onClick={() => navigateToLesson(nextLesson)}
+          onClick={navigateToNext}
         >
           Next
           <ChevronRight className="h-4 w-4" />

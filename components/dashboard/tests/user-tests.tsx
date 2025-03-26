@@ -20,62 +20,17 @@ interface Test {
 
 type SortField = "title" | "completionTime" | "lastScore" | "bestScore"
 
-const testData: Test[] = [
-  {
-    id: "1",
-    title: "Identify the Main point",
-    completionTime: "2024-12-26T10:30:00Z",
-    lastScore: 89,
-    bestScore: 95,
-  },
-  {
-    id: "2",
-    title: "Layout-Bullet Points, Tables and Fonts",
-    completionTime: "2024-12-25T14:15:00Z",
-    lastScore: 89,
-    bestScore: 95,
-  },
-  {
-    id: "3",
-    title: "Identify form and Purpose",
-    completionTime: "2024-12-24T09:45:00Z",
-    lastScore: 63,
-    bestScore: 70,
-  },
-  {
-    id: "4",
-    title: "Layout-Organizational Features",
-    completionTime: "2024-12-23T16:20:00Z",
-    lastScore: 63,
-    bestScore: 70,
-  },
-  {
-    id: "5",
-    title: "Finding the Meaning of Words",
-    completionTime: "2024-12-22T11:10:00Z",
-    lastScore: 89,
-    bestScore: 90,
-  },
-  {
-    id: "6",
-    title: "Diagnostic: B2 Writing",
-    completionTime: "2024-12-21T13:30:00Z",
-    lastScore: 99,
-    bestScore: 99,
-  },
-]
-
 export default function UserTests() {
   const { data: session } = useSession()
   const userId = session?.user?.id
 
-  const [tests, setTests] = useState<Test[]>(testData)
+  const [tests, setTests] = useState<Test[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [sortField, setSortField] = useState<SortField>("completionTime")
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(3)
+  const [itemsPerPage] = useState(6)
 
   useEffect(() => {
     setIsLoading(true)
