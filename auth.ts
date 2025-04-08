@@ -11,20 +11,34 @@ declare module "next-auth" {
       name: string;
       lastname: string;
       accessToken: string;
+      refreshToken: string;
       avatarUrl: string | undefined;
+      accessTokenExpires: number;
     };
   }
 
   interface User {
     lastname: string;
     accessToken: string;
+    refreshToken: string;
     avatarUrl: string | undefined;
+    accessTokenExpires: number;
+  }
+
+  interface JWT {
+    refreshToken?: string;
+    lastname?: string;
+    avatarUrl?: string;
+    accessTokenExpires?: number;
   }
 }
+
+const ACCESS_TOKEN_LIFETIME = 8 * 60 * 60 * 1000;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60 * 24 * 30,
   },
   providers: [
     CredentialsProvider({
@@ -46,11 +60,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             });
 
             const token = loginData?.token;
-            if (!token) throw new Error("Google auth failed");
+            const refreshToken = loginData?.refreshToken;
+            if (!token || !refreshToken) throw new Error("Google auth failed");
 
             const { data: userData } = await api.get(
               `/user/getuserbyemail?email=${decoded.email}`,
-              { headers: { Authorization: `Bearer ${token}` } },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
             );
 
             return {
@@ -59,7 +76,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name: userData.firstName,
               lastname: userData.lastName,
               accessToken: token,
+              refreshToken: refreshToken,
               avatarUrl: userData.avatarUrl ?? undefined,
+              accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFETIME,
             };
           } catch (error) {
             console.error("Google auth error:", error);
@@ -86,7 +105,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 headers: {
                   Authorization: `Bearer ${credentials.registrationToken}`,
                 },
-              },
+              }
             );
 
             return {
@@ -95,7 +114,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name: userData.firstName,
               lastname: userData.lastName,
               accessToken: credentials.registrationToken,
+              refreshToken: userData.refreshToken,
               avatarUrl: userData.avatarUrl ?? undefined,
+              accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFETIME,
             };
           } catch (error) {
             console.error("Registration token error:", error);
@@ -114,11 +135,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
 
           const token = loginData?.token;
+          const refreshToken = loginData?.refreshToken;
           if (!token) throw new Error("Invalid credentials");
 
           const { data: userData } = await api.get(
             `/user/getuserbyemail?email=${credentials.email}`,
-            { headers: { Authorization: `Bearer ${token}` } },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
           );
 
           return {
@@ -127,7 +151,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             name: userData.firstName,
             lastname: userData.lastName,
             accessToken: token,
+            refreshToken: refreshToken,
             avatarUrl: userData.avatarUrl ?? undefined,
+            accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFETIME,
           };
         } catch (error: any) {
           console.error("Auth error:", error.response?.data || error.message);
@@ -144,18 +170,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.name = user.name;
         token.lastname = user.lastname;
         token.accessToken = user.accessToken;
+        token.refreshToken = user.refreshToken;
         token.avatarUrl = user.avatarUrl;
+        token.accessTokenExpires = user.accessTokenExpires;
       }
-      return token;
+
+      if (Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+
+      return await refreshAccessToken(token);
     },
     async session({ session, token }) {
+      if (token.error === "RefreshAccessTokenError") {
+        return {
+          ...session,
+          user: {
+            id: "",
+            email: "",
+            name: "",
+            lastname: "",
+            accessToken: "",
+            refreshToken: "",
+            avatarUrl: "",
+            accessTokenExpires: 0,
+          },
+          expires: "0",
+        };
+      }
+
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
         session.user.lastname = token.lastname as string;
         session.user.accessToken = token.accessToken as string;
+        session.user.refreshToken = token.refreshToken as string;
         session.user.avatarUrl = token.avatarUrl as string | undefined;
+        session.user.accessTokenExpires = token.accessTokenExpires as number;
       }
       return session;
     },
@@ -164,3 +216,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/log-in",
   },
 });
+
+async function refreshAccessToken(token: any) {
+  try {
+    const { data } = await api.post("/auth/refresh", {
+      refreshToken: token.refreshToken,
+    });
+
+    if (!data?.token) {
+      throw new Error("Failed to refresh token");
+    }
+
+    return {
+      ...token,
+      accessToken: data.token,
+      refreshToken: data.refreshToken ?? token.refreshToken,
+      accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFETIME,
+    };
+  } catch (error) {
+    console.error("Refresh token error:", error);
+
+    return { ...token, error: "RefreshAccessTokenError" };
+  }
+}

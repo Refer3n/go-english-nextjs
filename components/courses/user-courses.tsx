@@ -46,7 +46,6 @@ export default function UserCourses() {
           setError("Invalid data format received from the server");
         }
         setIsLoading(false);
-        console.log(courses);
       })
       .catch((error) => {
         console.error("Error fetching user courses:", error);
