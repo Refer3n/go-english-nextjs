@@ -22,7 +22,7 @@ const Pagination: React.FC<PaginationProps> = ({
     }
   };
 
-  const handleNextPage = () => {
+  const handleNextPage = () => {  
     if (currentPage === totalPages) {
         onPageChange(1);
       } else {

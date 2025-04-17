@@ -1,6 +1,6 @@
 "use client";
 
-import BlogCard from "./BlogCard"; // Import the BlogCard component
+import BlogCard from "./BlogCard";
 import { useEffect, useState } from "react";
 import fetchData from "@/lib/actions/fetchData";
 import { useLoading } from "@/context/LoadingContext";
@@ -27,7 +27,7 @@ const BlogList: React.FC = () => {
   
         setBlogs(blogs);
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error("Error fetching blogs:", error);
       }
       finally {
         setLoading(false);
