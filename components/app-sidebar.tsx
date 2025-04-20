@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import Logo from "./Logo"
+import { useSession } from "next-auth/react"
 
 const navLinks = [
   { title: "My Dashboard", url: "/dashboard", icon: "/icons/nav-icons/dashboard.svg" },
@@ -30,6 +31,8 @@ const navLinks = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname() 
+  const session = useSession()
+  const avatarUrl = session.data?.user.avatarUrl
 
   return (
     <Sidebar className="bg-primary text-white border-none h-screen" {...props}>
@@ -51,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <Link href="/dashboard/profile" className="block">
               <div className="relative rounded-full overflow-hidden">
                 <Image
-                  src="/images/default3.jpg"
+                  src={avatarUrl || "/images/default3.jpg"}
                   alt="User avatar"
                   width={64}
                   height={64}
@@ -59,20 +62,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
               </div>
             </Link>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className="absolute right-0 top-1/2 -translate-y-1/2 -mr-6 flex items-center justify-center outline-none">
-                <ChevronDown className="size-4 text-white" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center">
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile">Profile</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Level Test</DropdownMenuItem>
-                <DropdownMenuItem>My courses</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
         

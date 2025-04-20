@@ -2,6 +2,7 @@
 
 import { signIn, signOut } from "@/auth";
 import api from "../api";
+import { redirect } from "next/navigation";
 
 export const logInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
@@ -137,5 +138,5 @@ export const confirmResetPassword = async (
 };
 
 export const signOutOfAccount = async () => {
-  await signOut({ redirectTo: "/" });
+  await signOut({ redirect: false })
 };

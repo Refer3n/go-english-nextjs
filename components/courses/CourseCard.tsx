@@ -98,9 +98,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold text-primary">{price} €</span>
             </div>
-            <button className="button !py-2 flex items-center gap-2">
-              Buy <ShoppingCart size={16} />
-            </button>
+            <Link href={`courses/${id}/details`}>
+              <button className="bg-yellow-400 hover:bg-yellow-500 text-primary font-bold py-2 px-4 rounded-full flex items-center gap-2">
+                Buy <ShoppingCart size={16} />
+              </button>
+            </Link>
           </div>
         </>
       )}

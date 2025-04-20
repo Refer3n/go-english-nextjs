@@ -31,6 +31,8 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
   const videoUrl = video?.url || ""
   const isUrlValid = isValidUrl(videoUrl)
 
+  console.log(videoUrl)
+
   const renderVideoPlayer = () => {
     if (!isUrlValid) {
       return (

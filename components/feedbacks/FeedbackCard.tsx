@@ -62,7 +62,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold text-lg">
+            <div className="w-full h-full flex items-center justify-center text-primary font-semibold text-lg">
               {user.firstName.charAt(0)}
               {user.lastName.charAt(0)}
             </div>

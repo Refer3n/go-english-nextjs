@@ -142,7 +142,7 @@ export default function UserCourses() {
                 )}
               </div>
               <Link href={`/dashboard/courses/${course.id}/about`}>
-                <button className="button-bordered !text-sm">
+                <button className="button-bordered !text-sm mt-3">
                   Continue Learning
                 </button>
               </Link>

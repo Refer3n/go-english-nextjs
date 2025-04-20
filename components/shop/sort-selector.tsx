@@ -16,8 +16,8 @@ export function SortSelector({ currentSort }: SortSelectorProps) {
   const handleSortChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString())
 
-    if (value === "price-low-high") {
-      params.delete("sort") 
+    if (value === "price") {
+      params.delete("sort")
     } else {
       params.set("sort", value)
     }

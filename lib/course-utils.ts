@@ -11,7 +11,7 @@ export async function fetchUserCourses(userId: string, accessToken: string) {
   try {
     const response = await api.get("/Course/GetUserCourses", {
       params: { userId },
-      headers: { Authorization: `Bearer ${accessToken}` },
+      // headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     if (response.data && Array.isArray(response.data)) {
@@ -83,12 +83,9 @@ export const fetchCourseContent = unstable_cache(
 export const fetchCourseDetails = unstable_cache(
   async (
     courseId: string | number,
-    accessToken: string
   ): Promise<CourseDetails> => {
     try {
-      const response = await api.get(`/Course/GetCourseInfo/${courseId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const response = await api.get(`/Course/GetCourseInfo/${courseId}`);
 
       if (response.data) {
         return response.data;

@@ -53,6 +53,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({
                     id={option.id}
                     checked={selectedOptions.includes(option.id)}
                     onCheckedChange={() => onChange(option.id)}
+                    className="text-white"
                   />
                   <Label htmlFor={option.id} className="text-sm font-normal cursor-pointer">
                     {option.label}

@@ -67,5 +67,6 @@ export interface CourseDetails {
   feedbacksNumber: number
   imageUrl: string
   estimatedTimeInMinutes: number
+  videoTimeInMinutes: number
 }
 

@@ -54,6 +54,8 @@ export default function ShopPage() {
           search,
         })
 
+        
+
         setCourses(courses)
         setTotalCount(totalCount)
         setCurrentPage(page)
@@ -80,6 +82,7 @@ export default function ShopPage() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+
   if (error) {
     return (
       <div className="px-[2vw] py-6">
@@ -92,13 +95,10 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="px-[2vw] py-6">
-      <div className="mb-8">
-        <SearchForm defaultValue={searchParams.get("search") ?? ""} />
-      </div>
+    <div className="px-[2vw] py-6 bg-light-400 h-auto">
 
       <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-1/4">
+        <div className="lg:w-1/4 pt-[60px]">
           <ShopFilters
             selectedLevels={searchParams.get("levels")?.split(",") ?? []}
             selectedInterests={searchParams.get("interests")?.split(",") ?? []}
@@ -109,7 +109,7 @@ export default function ShopPage() {
 
         <div className="lg:w-3/4">
           <div className="flex justify-end mb-6">
-            <SortSelector currentSort={searchParams.get("sort") ?? "price-low-high"} />
+            <SortSelector currentSort={searchParams.get("sort") ?? "price"} />
           </div>
 
           {isLoading ? (

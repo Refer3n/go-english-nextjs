@@ -49,7 +49,7 @@ export default async function CourseAboutPage({
     }
 
     try {
-      courseDetails = await fetchCourseDetails(courseId, accessToken)
+      courseDetails = await fetchCourseDetails(courseId)
     } catch (detailsError) {
       throw detailsError 
     }

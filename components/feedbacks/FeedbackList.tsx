@@ -29,7 +29,7 @@ const FeedbackList: React.FC = () => {
           "en"
         );
 
-        setFeedbacks(feedbacks);
+        setFeedbacks(feedbacks.slice(0,4));
       } catch (error) {
         console.error("Failed to fetch feedbacks:", error);
       }
