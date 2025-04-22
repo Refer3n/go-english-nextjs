@@ -46,8 +46,8 @@ export async function fetchCourses({
       : undefined
 
     const sortOptions: Record<string, { orderBy: string; direction: "asc" | "desc" }> = {
-      "price-high-low": { orderBy: "price", direction: "desc" },
-      "rating-high-low": { orderBy: "rating", direction: "desc" },
+      "price-high-low": { orderBy: "Price", direction: "desc" },
+      "rating-high-low": { orderBy: "Rating", direction: "desc" },
       "newest": { orderBy: "createdAt", direction: "desc" },
       "popularity": { orderBy: "feedbacksNumber", direction: "desc" },
       "default": { orderBy: "price", direction: "asc" },

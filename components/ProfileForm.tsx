@@ -98,7 +98,7 @@ const ProfileForm = <T extends FieldValues>({
                 name={field as Path<T>}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="capitalize text-gray-500 font-normal">
+                    <FormLabel className="capitalize text-light-300 font-normal">
                       {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                     </FormLabel>
                     <FormControl>
@@ -111,7 +111,7 @@ const ProfileForm = <T extends FieldValues>({
                             FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]
                           }
                           {...field}
-                          className="w-full bg-light-400 text-gray-500 px-3 py-2 border border-gray-300 rounded-[16px]"
+                          className="w-full bg-light-400 text-light-300 px-3 py-2 border border-gray-300 rounded-[16px]"
                           disabled={
                             field.name === "email" && isProfileMode === true
                           }

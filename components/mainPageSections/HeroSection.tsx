@@ -15,7 +15,7 @@ const slides = [
     alt: "Big Ben in London",
   },
   {
-    image: "/images/london-eye.jpg",
+    image: "https://nplimages.infradoxxs.com/cache/pcache2/01419086.jpg",
     alt: "London Eye at sunset",
   },
 ];

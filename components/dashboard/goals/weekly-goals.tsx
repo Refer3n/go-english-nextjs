@@ -51,7 +51,7 @@ export default function WeeklyGoals() {
   }, [goals]);
 
   useEffect(() => {
-    const today = new Date().getDay();
+    const today = new Date().getDay() -1;
     const lastVisit = goals.lastVisit ? new Date(goals.lastVisit) : null;
     const todayDate = new Date().toISOString().split("T")[0];
 

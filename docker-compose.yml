@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      secrets:
+        - env 
+
+    environment:
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NEXTAUTH_URL=http://localhost:3000
+      - AUTH_SECRET=TWZG8YRJ1YKMeUctaraibJEr7xZUETcXS/LNyklnYiU=
+      - NEXT_PUBLIC_API_URL=https://host.docker.internal:7168/api
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=275477223325-f1j1kovd1ngsmc4nmof3hbho1c3dt3hh.apps.googleusercontent.com
+
+    ports:
+      - "3000:3000"
+
+secrets:
+  env:
+    file: .env.build  

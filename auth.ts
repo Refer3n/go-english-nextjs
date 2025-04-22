@@ -36,6 +36,7 @@ declare module "next-auth" {
 const ACCESS_TOKEN_LIFETIME = 8 * 60 * 60 * 1000;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: true, 
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30,
@@ -53,6 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (credentials?.googleToken) {
           try {
             const decoded = parseJwt(credentials.googleToken as string);
+             
             if (!decoded?.email) throw new Error("Invalid Google token");
 
             const { data: loginData } = await api.post("/auth/signin-google", {
@@ -215,6 +217,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
     signIn: "/log-in",
   },
+  trustHost: true,
 });
 
 async function refreshAccessToken(token: any) {
