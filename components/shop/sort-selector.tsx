@@ -30,7 +30,7 @@ export function SortSelector({ currentSort }: SortSelectorProps) {
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-gray-300 bg-opacity-80 backdrop-blur-sm shadow-lg">
         {SORT_OPTIONS.map((option) => (
           <SelectItem key={option.id} value={option.id}>
             {option.label}
