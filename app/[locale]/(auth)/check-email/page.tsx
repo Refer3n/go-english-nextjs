@@ -1,7 +1,7 @@
 "use client";
 
+import LegalLinks from "@/components/LegalLinks";
 import { useSearchParams } from "next/navigation";
-import LegalLinks from "../../../components/LegalLinks";
 
 const Page = () => {
   const searchParams = useSearchParams();

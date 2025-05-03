@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Logo from "@/components/Logo"; // Import the new component
+import Logo from "@/components/Logo";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
