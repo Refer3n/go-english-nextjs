@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";// Import the Pagination component
+import { Link } from "@/i18n/navigation";
 import Pagination from "../Pagination";
+import { useTranslations } from "next-intl";
 
 const slides = [
   {
@@ -21,6 +22,7 @@ const slides = [
 ];
 
 export default function HeroSection() {
+  const t = useTranslations("HomePage.HeroSection");
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
@@ -39,23 +41,21 @@ export default function HeroSection() {
   return (
     <section className="main-section h-[calc(100vh-11rem)]">
       <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] h-full">
-      <div className="relative flex flex-col justify-center items-start bg-primary h-full gap-6 px-8 lg:px-16">
+        <div className="relative flex flex-col justify-center items-start bg-primary h-full gap-6 px-8 lg:px-16">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-            Master English,
-            <br />
-            Transform Your Future!
+            {t.rich("title", {
+              br: () => <br />,
+            })}
           </h1>
           <p className="text-light-500 text-xl mb-8 max-w-3xl font-medium">
-            Join our expert-led English courses and unlock global opportunities
-            whether you're aiming to excel in your career, ace exams, or travel
-            the world confidently.
+            {t("description")}
           </p>
           <div>
             <Link
               href="/get-started"
               className="button !bg-primary !border !border-light-100 !text-light-100"
             >
-              Get Started
+              {t("ctaButton")}
             </Link>
           </div>
         </div>
@@ -63,8 +63,8 @@ export default function HeroSection() {
         <div className="relative h-[400px] lg:h-full">
           <div className="absolute inset-0 transition-opacity duration-500">
             <Image
-              src={slides[currentIndex].image}
-              alt={slides[currentIndex].alt}
+              src={slides[currentIndex].image || "/placeholder.svg"}
+              alt={t(`slides.${currentIndex}.alt`)}
               layout="fill"
               objectFit="cover"
             />
@@ -74,8 +74,8 @@ export default function HeroSection() {
             <Pagination
               currentPage={currentIndex + 1}
               totalItems={slides.length}
-              itemsPerPage={1} 
-              onPageChange={(page) => goToSlide(page - 1)} 
+              itemsPerPage={1}
+              onPageChange={(page) => goToSlide(page - 1)}
             />
           </div>
         </div>

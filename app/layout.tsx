@@ -3,10 +3,14 @@ import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import "./safari-normalize.css";
 import { ReactNode } from "react";
-import { auth } from "@/auth";
 import { LoadingProvider } from "@/context/LoadingContext";
-import AuthProvider from "@/components/AuthProvider"; // Import the AuthProvider
+import AuthProvider from "@/components/AuthProvider";
 import Loader from "@/components/Loader";
+import { Toaster } from "@/components/ui/toaster";
+import { auth } from "@/auth";
+import { hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -14,22 +18,31 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Your App Title",
-  description: "Your app description",
+  title: "Go English",
+  description: "English learning application",
 };
 
-const RootLayout = async ({ children }: { children: ReactNode }) => {
+const RootLayout = async ({
+  children,
+  params
+}: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+}) => {
   const session = await auth();
 
+  const { locale } = await params;
+
   return (
-    <html lang="en">
-      <body className={`${nunitoSans.variable}`}>
-        <AuthProvider session={session}>
-          <LoadingProvider>
-            <Loader />
-            {children}
-          </LoadingProvider>
-        </AuthProvider>
+    <html lang={locale}>
+      <body className={nunitoSans.variable}>
+          <AuthProvider session={session}>
+            <LoadingProvider>
+              <Loader />
+              {children}
+              <Toaster />
+            </LoadingProvider>
+          </AuthProvider>
       </body>
     </html>
   );

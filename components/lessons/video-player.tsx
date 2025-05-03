@@ -1,10 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { FileText, Download, Play, AlertCircle } from "lucide-react"
+import { FileText, Download, AlertCircle } from "lucide-react"
 import type { Video } from "@/types/course"
+import Hls from "hls.js"
 
 interface VideoPlayerProps {
   video: Video
@@ -12,75 +13,74 @@ interface VideoPlayerProps {
 
 export function VideoPlayer({ video }: VideoPlayerProps) {
   const [showTranscript, setShowTranscript] = useState(false)
-  const [isClient, setIsClient] = useState(false)
   const [videoError, setVideoError] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  const isValidUrl = (url: string) => {
-    try {
-      new URL(url)
-      return true
-    } catch (e) {
-      return false
-    }
-  }
+  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   const videoUrl = video?.url || ""
-  const isUrlValid = isValidUrl(videoUrl)
 
-  console.log(videoUrl)
+  useEffect(() => {
+    if (!videoUrl || !videoRef.current) return
 
-  const renderVideoPlayer = () => {
-    if (!isUrlValid) {
-      return (
-        <div className="w-full aspect-video bg-gray-100 rounded-lg flex flex-col items-center justify-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mb-2" />
-          <p className="text-sm text-gray-500">Invalid video URL</p>
-        </div>
-      )
+    const hls = new Hls()
+
+    try {
+      if (Hls.isSupported()) {
+      
+        hls.loadSource(videoUrl)
+        hls.attachMedia(videoRef.current)
+
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          if (data.fatal) {
+            hls.destroy()
+            setVideoError(true)
+          }
+        })
+      } else if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
+        videoRef.current.src = videoUrl
+      } else {
+        setVideoError(true)
+      }
+    } catch (error) {
+      console.warn("HLS setup failed:", error)
+      setVideoError(true)
     }
 
-    return (
-      <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
-        <iframe
-          src={videoUrl}
-          className="w-full h-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          onError={() => setVideoError(true)}
-        />
-      </div>
-    )
-  }
+    return () => {
+      try {
+        hls?.destroy?.()
+      } catch {}
+    }
+
+  }, [videoUrl])
 
   const renderFallback = () => (
-    <div className="w-full aspect-video bg-gray-100 rounded-lg flex flex-col items-center justify-center">
-      <Play className="h-12 w-12 text-primary opacity-50 mb-2" />
-      <p className="text-sm text-gray-500">{videoError ? "Error loading video" : "Video player not available"}</p>
-      {videoUrl && (
-        <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="mt-2 text-primary hover:underline">
-          Open video in new tab
-        </a>
-      )}
-    </div>
+    <div className="w-full aspect-video bg-light-100 rounded-lg flex flex-col items-center justify-center border border-gray-200">
+    <AlertCircle className="h-12 w-12 text-red mb-2" />
+    <p className="text-sm text-primary/70">{videoError ? "Error loading video" : "Video format not supported."}</p>
+    {videoUrl && (
+      <a
+        href={videoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-2 text-primary hover:text-primary/80 hover:underline font-medium"
+      >
+        Open video in new tab
+      </a>
+    )}
+  </div>
   )
 
   return (
     <div className="mb-6">
       <div className="relative rounded-lg overflow-hidden aspect-video">
-        {isClient ? (
-          isUrlValid && !videoError ? (
-            renderVideoPlayer()
-          ) : (
-            renderFallback()
-          )
+        {!videoError ? (
+          <video
+            ref={videoRef}
+            controls
+            className="w-full h-full rounded-lg bg-black"
+          />
         ) : (
-          <div className="w-full aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-            <Play className="h-12 w-12 text-primary opacity-50" />
-          </div>
+          renderFallback()
         )}
       </div>
 
@@ -93,7 +93,7 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
           <FileText size={16} />
           Transcript
         </Button>
-        {isUrlValid && (
+        {videoUrl && (
           <Button
             variant="outline"
             className="flex items-center gap-2 text-primary border-primary hover:bg-primary/10"
@@ -118,4 +118,3 @@ export function VideoPlayer({ video }: VideoPlayerProps) {
     </div>
   )
 }
-

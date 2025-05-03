@@ -1,5 +1,6 @@
 import api from "@/lib/api"
 import type { CourseDetails } from "@/types/course"
+import { useLocale } from "next-intl"
 
 interface FetchCoursesParams {
   userId?: string
@@ -10,6 +11,7 @@ interface FetchCoursesParams {
   grammar: string[]
   sort: string
   search: string
+  langCode: string
 }
 
 interface FetchCoursesResult {
@@ -26,6 +28,7 @@ export async function fetchCourses({
   grammar,
   sort,
   search,
+  langCode,
 }: FetchCoursesParams): Promise<FetchCoursesResult> {
   try {
     const filterExpression =
@@ -64,10 +67,10 @@ export async function fetchCourses({
     }
 
     const response = await api.get("/Course/GetUnpurchasedCourses", {
-      params,
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Content-Language": langCode,
       },
+      params
     })
 
     const data = response.data ?? []

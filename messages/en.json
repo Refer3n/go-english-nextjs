@@ -1,0 +1,198 @@
+{
+  "Common": {
+    "switchToEnglish": "Switch to English",
+    "switchToUkrainian": "Switch to Ukrainian",
+    "Header": {
+      "searchPlaceholder": "Search",
+      "searchIconAlt": "Search icon",
+      "signUp": "Sign up",
+      "logIn": "Log in"
+    },
+    "DashboardHeader": {
+      "searchPlaceholder": "Search",
+      "searchIconAlt": "Search icon",
+      "signOutAlt": "Sign out"
+    },
+    "BlogCard": {
+      "viewFullStory": "View full story"
+    },
+    "FeedbackCard": {
+      "readMore": "Read more",
+      "readLess": "Read less",
+      "verifiedReviewer": "Verified Reviewer"
+    },
+    "CourseCard": {
+      "level": "Level",
+      "lessons": "lessons",
+      "viewProduct": "View product",
+      "buy": "Buy"
+    },
+    "Footer": {
+      "mainText": "At Go English School, we're passionate about helping you succeed. Whether you're a beginner or brushing up for advanced conversations, we have the tools and expertise to help you thrive. Don't wait—your journey to unlocking your superpower starts today.",
+      "contactUs": "Contact Us",
+      "workWithUs": "Work with Go English",
+      "faq": "FAQ",
+      "help": "Help",
+      "emailPlaceholder": "Your email",
+      "subscribe": "Subscribe",
+      "termsText": "Personal details will be held by the Go English and will only be used in relation to your request. Please read our <link>terms of use</link> for more information.",
+      "termsLink": "terms of use"
+    }
+  },
+  "Navigation": {
+    "Sidebar": {
+      "dashboard": "My Dashboard",
+      "courses": "Courses",
+      "materials": "Materials",
+      "awards": "Awards",
+      "shop": "Shop",
+      "basket": "Basket",
+      "userAvatar": "User avatar"
+    },
+    "MainMenu": {
+      "courses": "Courses",
+      "resources": "Resources",
+      "levelTest": "Level Test",
+      "blog": "Blog",
+      "news": "News",
+      "coursesSubmenu": {
+        "generalEnglish": "General English",
+        "businessEnglish": "Business English",
+        "examPrep": "Exam Preparation"
+      }
+    }
+  },
+  "Dashboard": {
+    "title": "My Dashboard",
+    "learningStatistics": "Learning Statistics",
+    "learningActivity": "My Learning Activity",
+    "tracker": "Tracker",
+    "myCourses": "My Courses",
+    "weeklyGoalTracker": "Weekly goal progress tracker"
+  },
+  "Profile": {
+    "userAvatar": "User avatar"
+  },
+  "Shop": {
+    "fetchError": "Failed to load courses. Please try again later.",
+    "error": "Error",
+    "noCoursesFound": "No courses found",
+    "adjustFilters": "Try adjusting your filters or search term."
+  },
+  "Courses": {
+    "title": "Courses",
+    "tabs": {
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "suggestedCourses": "Courses suggested for you",
+    "breadcrumb": {
+      "profile": "Profile",
+      "courses": "Courses"
+    }
+  },
+  "Lessons": {
+    "loading": "Loading...",
+    "modulePrefix": "Module",
+    "complete": "complete"
+  },
+  "CourseDetails": {
+    "boostFluency": "Boost your {title} Fluency",
+    "courseConsistsOf": "This course consists of {modulesCount} modules designed to guide learners towards achieving a {level} level of English proficiency.",
+    "courseIncludes": "This course includes:",
+    "onDemandVideo": "{hours} hours on-demand video",
+    "lessons": "{count} lessons",
+    "modules": "{count} modules",
+    "description": "Description",
+    "showLess": "Show less",
+    "fullCourseDescription": "Full course description",
+    "adding": "Adding...",
+    "addToBasket": "Add to basket",
+    "processing": "Processing...",
+    "buyNow": "Buy now",
+    "moneyBackGuarantee": "30-Day Money-Back Guarantee",
+    "lifetimeAccess": "Full Lifetime Access",
+    "reviews": "Reviews",
+    "reviewCount": "{count} reviews",
+    "noReviews": "No reviews yet for this course."
+  },
+  "CourseAbout": {
+    "aboutCourse": "About course",
+    "completion": "Completion",
+    "hoursStudy": "{hours} hours study",
+    "modules": "{count} modules",
+    "rating": "{rating} Rating",
+    "fullCourseDescription": "Full course description",
+    "restartCourse": "Restart Course",
+    "startLearning": "Start learning",
+    "continueLearning": "Continue Learning"
+  },
+  "HomePage": {
+    "title": "Hello world!",
+    "about": "Go to the about page",
+    "AboutSection": {
+      "title": "About Us",
+      "imageAlt": "Teacher with ABC chalkboard",
+      "description": "At <link>GO English</link>, we are passionate about providing high-quality English language learning resources. Our mission is to help learners of all levels <bold>develop</bold> their <bold>language skills</bold>.",
+      "missionTitle": "Our Mission",
+      "missionText": "Our mission is to help learners of all levels <bold>develop</bold> their <bold>language skills</bold>. <link>Join our</link> community today and start improving your English with us!",
+      "readMore": "Read more",
+      "exploreCourses": "Explore our Courses",
+      "stats": {
+        "learners": "of learners achieve their goals",
+        "experience": "years of experience",
+        "students": "students"
+      }
+    },
+    "FeedbackSection": {
+      "title": "Be Inspired",
+      "tagline": "Your Voice, Your Power – <link>Go English</link>",
+      "ctaButton": "Take the First Step Today!"
+    },
+    "CourseSection": {
+      "title": "Our popular courses"
+    },
+    "BlogSection": {
+      "title": "Latest from The Blog",
+      "viewMore": "View more"
+    },
+    "OfferSection": {
+      "title": "What We Offer",
+      "learnMore": "Learn more",
+      "ctaButton": "Book Your Classes Today",
+      "carousel": {
+        "item1": {
+          "title1": "Real-Life Online Practice",
+          "title2": "Speak with Confidence",
+          "description": "From day one, you'll practice speaking English in real-life scenarios. Build your confidence."
+        },
+        "item2": {
+          "title1": "Free access to Resources",
+          "title2": "Unlimited Learning Tools",
+          "description": "Enjoy access to our self-paced learning platform, packed with videos, exercises, and study guides. Progress on your terms with ..."
+        },
+        "item3": {
+          "title1": "Proven Success",
+          "title2": "Results That Matter",
+          "description": "With Go English ESOL School, you're not just learning English; you're investing in your future. Our team is highly qualified."
+        }
+      }
+    },
+    "HeroSection": {
+      "title": "Master English,<br></br>Transform Your Future!",
+      "description": "Join our expert-led English courses and unlock global opportunities whether you're aiming to excel in your career, ace exams, or travel the world confidently.",
+      "ctaButton": "Get Started",
+      "slides": {
+        "0": {
+          "alt": "Tower Bridge in London"
+        },
+        "1": {
+          "alt": "Big Ben in London"
+        },
+        "2": {
+          "alt": "London Eye at sunset"
+        }
+      }
+    }
+  }
+}

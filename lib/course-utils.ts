@@ -1,3 +1,5 @@
+"use server";
+
 import { unstable_cache } from "next/cache";
 import type { CourseContent, CourseDetails } from "@/types/course";
 import api from "./api";
@@ -5,156 +7,162 @@ import api from "./api";
 /**
  * @param userId
  * @param accessToken
- * @returns
+ * @param langCode
  */
-export async function fetchUserCourses(userId: string, accessToken: string) {
-  try {
-    const response = await api.get("/Course/GetUserCourses", {
-      params: { userId },
-      // headers: { Authorization: `Bearer ${accessToken}` },
-    });
+export async function fetchUserCourses(userId: string, accessToken: string, langCode: string) {
+  const cached = unstable_cache(
+    async () => {
+      try {
+        const response = await api.get("/Course/GetUserCourses", {
+          params: { userId },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Language": langCode,
+          },
+        });
 
-    if (response.data && Array.isArray(response.data)) {
-      return response.data;
-    } else {
-      console.error("Invalid data format:", response.data);
-      throw new Error("Invalid data format received from the server");
+        if (response.data && Array.isArray(response.data)) {
+          return response.data;
+        } else {
+          console.error("Invalid data format:", response.data);
+          throw new Error("Invalid data format received from the server");
+        }
+      } catch (error) {
+        console.error("Error fetching user courses:", error);
+        throw error;
+      }
+    },
+    [`user-courses`, userId, langCode],
+    {
+      revalidate: 3600,
+      tags: [`user-courses-${userId}-${langCode}`],
     }
-  } catch (error) {
-    console.error("Error fetching user courses:", error);
-    throw error;
-  }
+  );
+
+  return cached();
 }
 
 /**
  * @param courseId
  * @param userId
- */
-export const getCourseContentCacheKey = (
-  courseId: string | number,
-  userId?: string
-) =>
-  userId
-    ? `course-content-${courseId}-${userId}`
-    : `course-content-${courseId}`;
-
-/**
- * @param courseId
- */
-export const getCourseDetailsCacheKey = (courseId: string | number) =>
-  `course-details-${courseId}`;
-
-/**
- * @param courseId
- * @param userId
  * @param accessToken
- * @returns
+ * @param langCode
  */
-export const fetchCourseContent = unstable_cache(
-  async (
-    courseId: string | number,
-    userId: string,
-    accessToken: string
-  ): Promise<CourseContent> => {
-    try {
-      const response = await api.get("/Course/GetCourseContent", {
-        params: { courseId, userId },
-        headers: { Authorization: `Bearer ${accessToken}` },
+export async function fetchCourseContent(
+  courseId: string | number,
+  userId: string,
+  accessToken: string,
+  langCode: string
+): Promise<CourseContent> {
+  const cached = unstable_cache(
+    async (): Promise<CourseContent> => {
+      try {
+        const response = await api.get("/Course/GetCourseContent", {
+          params: { courseId, userId },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Language": langCode,
+          },
+        });
+
+        if (response.data) {
+          return response.data;
+        } else {
+          console.error("Invalid data format:", response.data);
+          throw new Error("Invalid data format received from the server");
+        }
+      } catch (error) {
+        console.error("Error fetching course content:", error);
+        throw error;
+      }
+    },
+    [`course-content`, String(userId), String(courseId), langCode],
+    {
+      revalidate: 60,
+      tags: [
+        `course-content-${userId}-${courseId}-${langCode}`,
+        `course-${courseId}-${langCode}`,
+      ],
+    }
+  );
+
+  return cached();
+}
+
+/**
+ * @param courseId
+ * @param accessToken
+ * @param langCode
+ */
+export async function fetchCourseDetails(
+  courseId: string | number,
+  accessToken: string,
+  langCode: string
+): Promise<CourseDetails> {
+  const cached = unstable_cache(
+    async (): Promise<CourseDetails> => {
+      const response = await api.get(`/Course/GetCourseInfo/${courseId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Language": langCode,
+        },
       });
 
       if (response.data) {
         return response.data;
       } else {
-        console.error("Invalid data format:", response.data);
         throw new Error("Invalid data format received from the server");
       }
-    } catch (error) {
-      console.error("Error fetching course content:", error);
-      throw error;
+    },
+    [`course-details-${courseId}-${langCode}`],
+    {
+      revalidate: 86400,
+      tags: [`course-details-${courseId}-${langCode}`, `course-${courseId}-${langCode}`],
     }
-  },
-  ["course-content"],
-  {
-    revalidate: 60,
-    tags: ["course-content"],
-  }
-);
+  );
 
-export const fetchCourseDetails = unstable_cache(
-  async (
-    courseId: string | number,
-  ): Promise<CourseDetails> => {
-    try {
-      const response = await api.get(`/Course/GetCourseInfo/${courseId}`);
+  return cached();
+}
 
-      if (response.data) {
-        return response.data;
-      } else {
-        console.error("Invalid data format:", response.data);
-        throw new Error("Invalid data format received from the server");
-      }
-    } catch (error) {
-      console.error("Error fetching course details:", error);
-      throw error;
-    }
-  },
-  ["course-details"],
-  {
-    revalidate: 300,
-    tags: ["course-details"],
-  }
-);
-export const fetchAllCourses = (
+/**
+ * @param number
+ * @param orderBy
+ * @param direction
+ * @param langCode
+ */
+export async function fetchAllCourses(
   number: number,
   orderBy: string,
-  direction: string = "desc" 
-): Promise<CourseDetails[]> =>
-  api
-    .get<CourseDetails[]>("/Course/GetCoursesinfo", {
-      params: { orderBy, direction, number },
-    })
-    .then((response) => {
-      if (!Array.isArray(response.data)) {
-        console.error("Invalid data format:", response.data);
-        throw new Error("Invalid data format received from the server");
-      }
-      return response.data;
-    })
-    .catch((error) => {
-      console.error("Error fetching courses:", error.message || error);
-      throw error;
-    });
+  direction = "desc",
+  langCode: string
+): Promise<CourseDetails[]> {
+  const cached = unstable_cache(
+    async (): Promise<CourseDetails[]> => {
+      try {
+        const response = await api.get<CourseDetails[]>("/Course/GetCoursesinfo", {
+          params: { orderBy, direction, number },
+          headers: {
+            "Content-Language": langCode,
+          },
+        });
 
+        if (!Array.isArray(response.data)) {
+          console.error("Invalid data format:", response.data);
+          throw new Error("Invalid data format received from the server");
+        }
 
-export function findNextLesson(courseContent: CourseContent) {
-  for (const module of courseContent.modules) {
-    for (const lesson of module.lessons) {
-      if (!lesson.isCompleted) {
-        return {
-          lesson,
-          moduleId: module.id,
-          url: `/dashboard/courses/${courseContent.id}/modules/${module.id}/lessons/${lesson.id}`,
-        };
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        throw error;
       }
+    },
+    [`all-courses-${langCode}`],
+    {
+      revalidate: 86400,
+      tags: [`all-courses-${langCode}`],
     }
-  }
+  );
 
-  if (
-    courseContent.modules.length > 0 &&
-    courseContent.modules[0].lessons.length > 0
-  ) {
-    const firstModule = courseContent.modules[0];
-    const firstLesson = firstModule.lessons[0];
-    return {
-      lesson: firstLesson,
-      moduleId: firstModule.id,
-      url: `/dashboard/courses/${courseContent.id}/modules/${firstModule.id}/lessons/${firstLesson.id}`,
-    };
-  }
-
-  return {
-    lesson: null,
-    moduleId: null,
-    url: `/dashboard/courses/${courseContent.id}/about`,
-  };
+  return cached();
 }

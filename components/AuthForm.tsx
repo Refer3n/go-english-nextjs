@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from "./ui/checkbox";

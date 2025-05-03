@@ -1,0 +1,169 @@
+"use client"
+
+import { useRouter } from "@/i18n/navigation"
+import { Progress } from "@/components/ui/progress"
+import { VideoPlayer } from "@/components/lessons/video-player"
+import { TestQuestions } from "@/components/lessons/test-questions"
+import { CourseSidebar } from "@/components/lessons/course-sidebar"
+import { useEffect, useState, useCallback, useTransition } from "react"
+import type { CourseContent, Module, Lesson } from "@/types/course"
+import { LessonCompletionButton } from "@/components/lessons/lesson-completion-button"
+import { dismissAllToasts } from "@/hooks/use-toast"
+import { useTranslations } from "next-intl"
+
+export function useCleanToasts() {
+  useEffect(() => {
+    dismissAllToasts()
+  }, [])
+}
+
+interface LessonClientProps {
+  courseId: string
+  moduleId: string
+  lessonId: string
+  lesson: Lesson
+  module: Module
+  moduleProgress: number
+  prevLesson: Lesson | null
+  prevModuleId: string | number | null
+  nextLesson: Lesson | null
+  nextModuleId: string | number | null
+  courseContent: CourseContent
+}
+
+export function LessonClient({
+  courseId,
+  moduleId,
+  lessonId,
+  lesson,
+  module,
+  moduleProgress,
+  prevLesson,
+  prevModuleId,
+  nextLesson,
+  nextModuleId,
+  courseContent: initialCourseContent,
+}: LessonClientProps) {
+  const t = useTranslations("Lessons")
+  const router = useRouter()
+  const [isClient, setIsClient] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const [isLoading, setIsLoading] = useState(false)
+  const [testScore, setTestScore] = useState<number>(-1)
+  const hasVideoAndTest = lesson.lessonType === "VideoWithTest"
+
+  useCleanToasts()
+
+  const [courseContent, setCourseContent] = useState<CourseContent>(initialCourseContent)
+
+  const updateCourseContent = useCallback((updatedContent: CourseContent) => {
+    setCourseContent(updatedContent)
+  }, [])
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    setCourseContent(initialCourseContent)
+  }, [initialCourseContent])
+
+  const navigateToLesson = useCallback(
+    (lesson: Lesson) => {
+      setIsLoading(true)
+      startTransition(() => {
+        router.push(`/dashboard/courses/${courseId}/modules/${moduleId}/lessons/${lesson.id}`, { scroll: false })
+      })
+    },
+    [courseId, moduleId, router],
+  )
+
+  useEffect(() => {
+    setIsLoading(false)
+  }, [lessonId])
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+      {(isPending || isLoading) && (
+        <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
+          <div className="animate-pulse text-primary font-medium">{t("loading")}</div>
+        </div>
+      )}
+
+      <div className="lg:col-span-2">
+        <h1 className="text-2xl font-bold mb-4">
+          {t("modulePrefix")} {module.order}: {lesson.title}
+        </h1>
+
+        <div className="mb-4">
+          <p className="text-light-300">{lesson.description}</p>
+          <div className="flex items-center mt-2">
+            <Progress value={moduleProgress} className="flex-1 h-2 bg-light-100" />
+            <span className="ml-2 text-sm text-light-300">
+              {moduleProgress}% {t("complete")}
+            </span>
+          </div>
+        </div>
+
+        {isClient && (lesson.lessonType === "Video" || lesson.lessonType === "VideoWithTest") && lesson.video && (
+          <VideoPlayer video={lesson.video} />
+        )}
+
+        {isClient && (lesson.lessonType === "Test" || lesson.lessonType === "VideoWithTest") && lesson.test && (
+          <TestQuestions
+            test={lesson.test}
+            lessonType={lesson.lessonType}
+            lessonId={lessonId}
+            prevLesson={prevLesson}
+            nextLesson={nextLesson}
+            nextModuleId={nextModuleId}
+            onNavigate={navigateToLesson}
+            onScoreChange={setTestScore}
+            hideSubmitButton={hasVideoAndTest}
+            courseContent={courseContent}
+            updateCourseContent={updateCourseContent}
+          />
+        )}
+
+        {hasVideoAndTest && testScore >= 0 && (
+          <div className="mt-8 flex justify-end">
+            <LessonCompletionButton
+              lessonId={lessonId}
+              testId={lesson.test?.id}
+              score={testScore}
+              isCompleted={lesson.isCompleted}
+              nextLesson={nextLesson}
+              nextModuleId={nextModuleId}
+              className="bg-primary hover:bg-primary/90 text-white"
+              courseContent={courseContent}
+              updateCourseContent={updateCourseContent}
+            />
+          </div>
+        )}
+
+        {lesson.lessonType === "Video" && (
+          <div className="mt-8 flex justify-end">
+            <LessonCompletionButton
+              lessonId={lessonId}
+              isCompleted={lesson.isCompleted}
+              nextLesson={nextLesson}
+              nextModuleId={nextModuleId}
+              className="bg-primary hover:bg-primary/90 text-white"
+              courseContent={courseContent}
+              updateCourseContent={updateCourseContent}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="lg:col-span-1">
+        <CourseSidebar
+          courseContent={courseContent}
+          courseId={courseId}
+          currentModuleId={moduleId}
+          currentLessonId={lessonId}
+        />
+      </div>
+    </div>
+  )
+}

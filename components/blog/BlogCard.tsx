@@ -1,23 +1,29 @@
-import Link from "next/link";
-import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+"use client"
+
+import type React from "react"
+
+import { Link } from "@/i18n/navigation"
+import Image from "next/image"
+import { ChevronRight } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface Blog {
-  id: number;
-  title: string;
-  description: string;
-  content: string;
-  image?: string;
+  id: number
+  title: string
+  description: string
+  content: string
+  image?: string
 }
 
 interface BlogCardProps {
-  blog: Blog;
+  blog: Blog
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
-  const { id, title, description, image } = blog;
+  const t = useTranslations("Common.BlogCard")
+  const { id, title, description, image } = blog
 
-  const truncatedDescription = description.length > 100 ? `${description.slice(0, 100)}...` : description;
+  const truncatedDescription = description.length > 100 ? `${description.slice(0, 100)}...` : description
 
   return (
     <div className="bg-transparent p-6 flex flex-col gap-3 w-[300px] h-[400px]">
@@ -30,16 +36,16 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
           className="rounded-lg"
         />
       </div>
-      
+
       <h3 className="text-lg font-semibold text-primary">{title}</h3>
-      
+
       <p className="text-black-100 text-base">{truncatedDescription}</p>
-      
+
       <Link href={`/blog/${id}`} className="link-text flex items-center mt-auto">
-        View full story <ChevronRight className="w-4 h-4" />
+        {t("viewFullStory")} <ChevronRight className="w-4 h-4" />
       </Link>
     </div>
-  );
-};
+  )
+}
 
-export default BlogCard;
+export default BlogCard

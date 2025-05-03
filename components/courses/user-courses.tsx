@@ -6,14 +6,15 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen } from "lucide-react";
-import api from "@/lib/api";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { fetchUserCourses } from "@/lib/course-utils";
+import { useLocale } from "next-intl";
 
 interface Course {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
+  imageUrl: string;
   progress: number;
   lastActive?: string;
   level: string;
@@ -27,31 +28,25 @@ export default function UserCourses() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const locale = useLocale(); 
+
   useEffect(() => {
     if (!userId || !session?.user?.accessToken) return;
 
     setIsLoading(true);
     setError(null);
 
-    api
-      .get("/Course/GetUserCourses", {
-        params: { userId },
-        headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
-      })
-      .then((response) => {
-        if (response.data && Array.isArray(response.data)) {
-          setCourses(response.data);
-        } else {
-          console.error("Invalid data format:", response.data);
-          setError("Invalid data format received from the server");
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching user courses:", error);
-        setError("Failed to fetch user courses");
-        setIsLoading(false);
-      });
+     fetchUserCourses(userId, session.user.accessToken, locale)
+          .then((data) => {
+            setCourses(data || []);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.error("Error fetching user courses:", err);
+            setError(err.message || "Failed to fetch user courses");
+            setCourses([]); 
+            setIsLoading(false);
+          });
   }, [userId, session?.user?.accessToken]);
 
   if (isLoading) {
@@ -109,7 +104,7 @@ export default function UserCourses() {
           <div key={course.id} className="flex items-start gap-4">
             <div className="relative overflow-hidden flex-shrink-0 items-center">
               <Image
-                src={course.thumbnail || "/images/default.jpg"}
+                src={course.imageUrl || "/images/default.jpg"}
                 alt={course.title}
                 width={120}
                 height={120}

@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import Image from "next/image"
 import StarRating from "../StarsRating"
+import { useTranslations } from "next-intl"
 
 interface User {
   id: number
@@ -25,10 +26,11 @@ interface FeedbackCardProps {
 }
 
 const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
-  const { rating, comments, user } = feedback;
-  const [expanded, setExpanded] = useState(false);
-  const truncatedComments = comments.length > 100 ? `${comments.slice(0, 100)}...` : comments;
-  const formattedDate = "29.11.2024";
+  const t = useTranslations("Common.FeedbackCard")
+  const { rating, comments, user } = feedback
+  const [expanded, setExpanded] = useState(false)
+  const truncatedComments = comments.length > 100 ? `${comments.slice(0, 100)}...` : comments
+  const formattedDate = "29.11.2024"
 
   return (
     <div className="relative bg-gray-300 shadow-xl rounded-2xl p-6 w-full max-w-lg">
@@ -45,7 +47,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
               className="text-primary font-medium ml-1 hover:underline focus:outline-none"
               onClick={() => setExpanded(!expanded)}
             >
-              {expanded ? "Read less" : "Read more"}
+              {expanded ? t("readLess") : t("readMore")}
             </button>
           )}
         </p>
@@ -72,7 +74,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
           <p className="font-semibold text-sm text-gray-800">
             {user.firstName} {user.lastName}
           </p>
-          <p className="text-gray-500 text-xs">Verified Reviewer</p>
+          <p className="text-gray-500 text-xs">{t("verifiedReviewer")}</p>
         </div>
       </div>
     </div>
@@ -80,4 +82,3 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback }) => {
 }
 
 export default FeedbackCard
-

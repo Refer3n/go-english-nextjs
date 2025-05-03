@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # Use Node.js LTS as the base image
-FROM node:23-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -14,13 +14,20 @@ RUN npm install
 FROM base AS builder
 WORKDIR /app
 
-# Copy deps
-COPY --from=deps /app/node_modules ./node_modules
+# Build-time environment variables
+ARG NEXTAUTH_URL
+ARG AUTH_SECRET
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
-# Copy source code
+ENV NEXTAUTH_URL=$NEXTAUTH_URL \
+    AUTH_SECRET=$AUTH_SECRET \
+    NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
+
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Inject env vars securely during build
 RUN npm run build
 
 # Production image, copy only what's needed
@@ -28,10 +35,12 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 # Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
 
 # Copy necessary files
 COPY --from=builder /app/public ./public
@@ -43,10 +52,6 @@ RUN chown -R nextjs:nodejs /app /app/.next
 
 # Use non-root user
 USER nextjs
-
-# Runtime env vars (non-secret can go here)
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
 
 EXPOSE 3000
 

@@ -36,7 +36,6 @@ declare module "next-auth" {
 const ACCESS_TOKEN_LIFETIME = 8 * 60 * 60 * 1000;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: true, 
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24 * 30,

@@ -6,14 +6,15 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen, MoreVertical } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { fetchUserCourses } from "@/lib/course-utils";
+import { useLocale } from "next-intl";
 
 interface Course {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
+  imageUrl: string;
   progress: number;
   lastActive?: string;
   level: string;
@@ -31,13 +32,15 @@ export default function UserCourseList({ status }: UserCourseListProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const locale = useLocale();
+
   useEffect(() => {
     if (!userId || !session?.user?.accessToken) return;
 
     setIsLoading(true);
     setError(null);
 
-    fetchUserCourses(userId, session.user.accessToken)
+    fetchUserCourses(userId, session.user.accessToken, locale)
       .then((data) => {
         setCourses(data || []);
         setIsLoading(false);
@@ -119,7 +122,7 @@ export default function UserCourseList({ status }: UserCourseListProps) {
           >
             <div className="relative overflow-hidden flex-shrink-0">
               <Image
-                src={course.thumbnail || "/images/default.jpg"}
+                src={course.imageUrl || "/images/default.jpg"}
                 alt={course.title}
                 width={200} 
                 height={130}

@@ -1,24 +1,20 @@
 "use server"
 
-import { revalidateTag } from "next/cache"
-import { getCourseContentCacheKey } from "../course-utils"
+import { revalidateTag } from "next/cache";
 
-export async function invalidateCourseCache(courseId: string, userId: string) {
-  revalidateTag(`course-${courseId}`)
-  revalidateTag("course-content")
-  revalidateTag("course-details")
-  revalidateTag("cached-course-content")
+/**
+ * @param courseId
+ * @param userId
+ * @returns
+ */
+export async function revalidateUserCourseCache(courseId: string, userId: string) {
+  const langCodes = ['en', 'uk'];
 
-  revalidateTag(getCourseContentCacheKey(courseId, userId))
+  for (const lang of langCodes) {
+    revalidateTag(`course-content-${userId}-${courseId}-${lang}`);
+    revalidateTag(`user-courses-${userId}-${lang}`);
+  }
 
-  return { success: true }
-}
-
-export async function invalidateAllCourseCaches() {
-  revalidateTag("course-content")
-  revalidateTag("course-details")
-  revalidateTag("cached-course-content")
-
-  return { success: true }
+  return { success: true };
 }
 

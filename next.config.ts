@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -11,8 +12,9 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["lh3.googleusercontent.com", "t3.ftcdn.net", "img.freepik.com", "nplimages.infradoxxs.com"],
+    domains: ["lh3.googleusercontent.com", "t3.ftcdn.net", "img.freepik.com", "nplimages.infradoxxs.com", "media.istockphoto.com", "www.fpacademy.co.in", "eduww.net", "assets.entrepreneur.com"],
   },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);
