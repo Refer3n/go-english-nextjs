@@ -7,7 +7,7 @@ export const signUpSchema = z
     email: z.string().email({ message: "Please enter a valid email address." }),
     password: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters long." })
+      .min(8, { message: "Password must be at least 6 characters long." })
       .regex(/[A-Z]/, {
         message: "Password must contain at least one uppercase letter.",
       })
@@ -25,7 +25,7 @@ export const logInSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
     .string()
-    .min(6, { message: "Password must contain at least 6 characters." }),
+    .min(8, { message: "Password must contain at least 6 characters." }),
   rememberMe: z.boolean().optional(),
 });
 
@@ -37,7 +37,7 @@ export const confirmResetPasswordSchema = z.object({
   token: z.string(),
   password: z
     .string()
-    .min(6, { message: "Password must contain at least 6 characters." })
+    .min(8, { message: "Password must contain at least 6 characters." })
     .regex(/[A-Z]/, {
       message: "Password must contain at least one uppercase letter.",
     })
@@ -66,7 +66,7 @@ export const updatePasswordSchema = z
     oldPassword: z.string(),
     newPassword: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters long." })
+      .min(8, { message: "Password must be at least 6 characters long." })
       .regex(/[A-Z]/, {
         message: "Password must contain at least one uppercase letter.",
       })

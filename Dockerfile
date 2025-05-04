@@ -12,9 +12,9 @@ FROM base AS builder
 WORKDIR /app
 
 # build-time environment variables
-ENV NEXTAUTH_URL="http://localhost:3000" \
+ENV NEXTAUTH_URL="http://172.20.0.30:3000" \
     AUTH_SECRET="TWZG8YRJ1YKMeUctaraibJEr7xZUETcXS/LNyklnYiU=" \
-    NEXT_PUBLIC_API_URL="https://localhost:7168/api" \
+    NEXT_PUBLIC_API_URL="http://172.20.0.30:7168" \
     NEXT_PUBLIC_GOOGLE_CLIENT_ID="275477223325-f1j1kovd1ngsmc4nmof3hbho1c3dt3hh.apps.googleusercontent.com"
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -30,9 +30,9 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Also set runtime ENV vars
-ENV NEXTAUTH_URL="http://localhost:3000" \
+ENV NEXTAUTH_URL="http://172.20.0.30:3000" \
     AUTH_SECRET="TWZG8YRJ1YKMeUctaraibJEr7xZUETcXS/LNyklnYiU=" \
-    NEXT_PUBLIC_API_URL="https://localhost:7168/api" \
+    NEXT_PUBLIC_API_URL="http://172.20.0.30:7168" \
     NEXT_PUBLIC_GOOGLE_CLIENT_ID="275477223325-f1j1kovd1ngsmc4nmof3hbho1c3dt3hh.apps.googleusercontent.com"
 
 RUN addgroup --system --gid 1001 nodejs \
